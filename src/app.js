@@ -85,6 +85,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.2.4", added: [], fixed: ["Co je nového: záznamy se už nepřekrývají"] },
   { v: "1.2.3", added: ["Sekce Co je nového"], fixed: ["PC: aktualizace se po restartu už neopakuje dokola", "iPhone: aplikace správně pozná novou verzi a funguje i bez internetu"] },
   { v: "1.2.2", added: [], fixed: ["Learning na mobilu: tabulky se vejdou do karty a lišta témat nepřekrývá text"] },
   { v: "1.2.1", added: ["Ukazatel v hlavičce: online/offline a jestli máš nejnovější verzi"], fixed: [] },
@@ -97,7 +98,7 @@ function renderUpdates() {
   $("#updates").innerHTML = `<a class="back" href="#/">${ic("back")}Všechny předměty</a>
     <p class="eyebrow">Tvoje verze ${esc(APP_VERSION)}</p>
     <h1 class="subject-title">Co je nového</h1>
-    ${CHANGELOG.map(c => `<article class="lc upd"><h2>Verze ${esc(c.v)}</h2>${list("Nové", "new", c.added)}${list("Opraveno", "fix", c.fixed)}</article>`).join("")}`;
+    ${CHANGELOG.map(c => `<article class="lc rel"><h2>Verze ${esc(c.v)}</h2>${list("Nové", "new", c.added)}${list("Opraveno", "fix", c.fixed)}</article>`).join("")}`;
 }
 
 // ===================== DOMŮ =====================

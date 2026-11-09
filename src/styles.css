@@ -291,8 +291,8 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .upd-link b{display:block;font-weight:650}
 .upd-link small{display:block;color:var(--muted);font-size:13px}
 .upd-link>svg.i{width:18px;height:18px;color:var(--muted);flex:none}
-.upd h2::before{display:none}
+.rel h2::before{display:none}
 .upd-label{margin:12px 0 0;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
 .upd-label.new{color:var(--primary)} .upd-label.fix{color:var(--ok)}
-.upd ul{margin-top:4px}
+.rel ul{margin-top:4px}
 @media (hover:hover) and (pointer:fine){.upd-link:hover{border-color:var(--border-strong)}}

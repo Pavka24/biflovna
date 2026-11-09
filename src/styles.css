@@ -314,3 +314,8 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
 .upd-label.new{color:var(--primary)} .upd-label.fix{color:var(--ok)}
 .rel ul{margin-top:4px}
 @media (hover:hover) and (pointer:fine){.upd-link:hover{border-color:var(--border-strong)}}
+
+/* export do PDF */
+.pdf-bar{display:flex;justify-content:flex-end;margin-bottom:10px}
+.pdf-panel{margin-bottom:14px;padding:20px}
+.pdf-act{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:16px}

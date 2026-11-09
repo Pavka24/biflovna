@@ -49,7 +49,7 @@ const appJs = r("src/app.js").replace(
   `const SUBJECTS = [];\nconst APP_VERSION = ${JSON.stringify(pkg.version)};\nconst CONTENT = ${JSON.stringify({ hash, date })};\nconst UPDATE_URL = ${JSON.stringify(webUrl)};`
 );
 // app.js definuje registr, předměty se registrují až po něm
-const js = appJs + "\n" + subjJs;
+const js = r("node_modules/jspdf/dist/jspdf.umd.min.js") + "\n" + r("assets/pdf-fonts.js") + "\n" + appJs + "\n" + r("src/pdf.js") + "\n" + subjJs;
 
 const pwa = `<link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-180.png">

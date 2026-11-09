@@ -86,6 +86,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.2.9", added: ["Export výpisků do PDF: v Learningu si vybereš témata a uložíš je"], fixed: [] },
   { v: "1.2.8", added: ["Přehlednější Learning: nadpisy, srovnávací rámečky, barevné klíčové pojmy"], fixed: ["Výpisky jsou srozumitelnější, hesla jsou celé krátké věty"] },
   { v: "1.2.7", added: [], fixed: ["Lepší ovládání a čitelnost na telefonu, v tmavém režimu sedí horní lišta", "Hlavička i domovská stránka se vejdou i na malé telefony", "Výběr počtu otázek už na iPhonu nepřibližuje stránku"] },
   { v: "1.2.6", added: ["Praktické otázky: výpočty podsítí, hledání poruch a volba kabelu nebo firewallu"], fixed: ["Vyřazené otázky typu barva vodiče nebo rok a odpovědi, které šly poznat bez učení"] },
@@ -135,6 +136,7 @@ function renderSubject(tab) {
   $("#learnPane").classList.toggle("hide", tab !== "learn");
   if (tab === "learn" && learnFor !== S) {            // výpisky se vykreslí až při prvním otevření
     learnFor = S;
+    $("#pdfPanel").classList.add("hide"); $("#bPdf").setAttribute("aria-expanded", false);
     $("#toc").innerHTML = Object.entries(S.topics).map(([k, t]) => `<a href="#L-${k}" class="tag" style="--c:${t.c}">${esc(t.n)}</a>`).join("");
     $("#learnBody").innerHTML = S.learn || `<p class="hint">K tomuto předmětu zatím nejsou výpisky.</p>`;
     $$("#learnBody .lc").forEach(el => { const t = S.topics[el.id.slice(2)]; if (t) el.style.setProperty("--c", t.c); });

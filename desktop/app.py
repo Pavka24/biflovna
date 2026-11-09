@@ -4,6 +4,7 @@ Aktualizace: aplikace (JS) zjistí novou verzi z version.json → zavolá Api.pr
 stáhne instalátor z GitHub Releases. Pak buď Api.apply() (tlačítko „Restartovat teď“), nebo se instalátor
 tiše spustí sám po zavření okna.
 """
+import base64
 import os
 import shutil
 import subprocess
@@ -74,6 +75,19 @@ class Api:
         run_installer(relaunch=True)
         threading.Timer(0.4, lambda: [w.destroy() for w in list(webview.windows)]).start()
         return {"ok": True}
+
+    def save_pdf(self, data: str, name: str):
+        """Zeptá se, kam PDF uložit, a uloží ho."""
+        try:
+            kind = webview.FileDialog.SAVE if hasattr(webview, "FileDialog") else webview.SAVE_DIALOG
+            res = webview.windows[0].create_file_dialog(kind, save_filename=os.path.basename(str(name)), file_types=("PDF (*.pdf)",))
+            if not res:
+                return {"ok": False, "cancel": True}
+            with open(res if isinstance(res, str) else res[0], "wb") as f:
+                f.write(base64.b64decode(data))
+            return {"ok": True}
+        except Exception as e:  # noqa: BLE001
+            return {"ok": False, "error": str(e)}
 
     # zpětná kompatibilita s verzí 1.1.0 (stáhnout + hned nainstalovat)
     def update(self, url: str):

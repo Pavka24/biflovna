@@ -1,6 +1,6 @@
 {
   "name": "biflovna",
-  "version": "1.2.8",
+  "version": "1.2.9",
   "private": true,
   "description": "Biflovna – trénovací testy a výpisky ke zkouškám (offline).",
   "type": "module",
@@ -14,10 +14,12 @@
   "dependencies": {
     "@capacitor/android": "^8.6.0",
     "@capacitor/app": "^8.1.2",
-    "@capacitor/core": "^8.6.0"
+    "@capacitor/core": "^8.6.0",
+    "jspdf": "^4.2.1"
   },
   "devDependencies": {
-    "@capacitor/cli": "^8.6.0"
+    "@capacitor/cli": "^8.6.0",
+    "inter-ui": "^4.1.1"
   },
   "webUrl": "https://pavka24.github.io/biflovna/"
 }

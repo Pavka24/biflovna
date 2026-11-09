@@ -1,7 +1,9 @@
 package cz.biflovna.app;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Base64;
 import androidx.core.content.FileProvider;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.Plugin;
@@ -17,6 +19,37 @@ import java.net.URL;
 /** Stáhne novou verzi APK z GitHub Releases přímo v aplikaci a otevře systémovou instalaci. */
 @CapacitorPlugin(name = "Updater")
 public class UpdaterPlugin extends Plugin {
+
+    /** Uloží PDF do cache a otevře systémovou nabídku (uložit do souborů, poslat…). */
+    @PluginMethod
+    public void sharePdf(PluginCall call) {
+        String data = call.getString("data");
+        String name = call.getString("name", "Biflovna.pdf").replaceAll("[^A-Za-z0-9._-]", "_");
+        if (data == null) {
+            call.reject("chybí data");
+            return;
+        }
+        new Thread(() -> {
+            try {
+                File dir = new File(getContext().getCacheDir(), "pdf");
+                dir.mkdirs();
+                File pdf = new File(dir, name);
+                try (FileOutputStream out = new FileOutputStream(pdf)) {
+                    out.write(Base64.decode(data, Base64.DEFAULT));
+                }
+                Uri uri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileprovider", pdf);
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("application/pdf");
+                i.putExtra(Intent.EXTRA_STREAM, uri);
+                i.setClipData(ClipData.newRawUri("", uri));
+                i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                getActivity().runOnUiThread(() -> getActivity().startActivity(Intent.createChooser(i, "Uložit nebo poslat PDF")));
+                call.resolve();
+            } catch (Exception e) {
+                call.reject("PDF se nepodařilo uložit: " + e.getMessage());
+            }
+        }).start();
+    }
 
     @PluginMethod
     public void install(PluginCall call) {

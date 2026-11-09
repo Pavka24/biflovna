@@ -8,6 +8,7 @@ Uživatel komunikuje česky – odpovídej česky.
 ## Struktura
 - `src/subjects/<id>.js` – **jeden soubor = jeden předmět** (otázky + learning). Šablona: `src/subjects/_sablona.js.txt`.
 - `src/app.js`, `src/index.html`, `src/styles.css` – aplikace (router, test, výsledky, Learning). Na obsah předmětů nesahej odsud.
+- `src/pdf.js` – export výpisků do PDF (jsPDF, skládá z HTML v `learn`; nové bloky ve výpiscích je potřeba doplnit do smyčky na konci `makeLearnPdf`). `assets/pdf-fonts.js` generuje `scripts/make_pdf_font.py`, znovu ho spusť při nových znacích.
 - `assets/` – ikony (SVG) a vložené fonty. `desktop/app.py` – PC okno (pywebview). `installer/Biflovna.iss` – instalátor.
 - `android/` – Capacitor projekt. `signing/` – **podpisový klíč APK, nikdy nemazat** (bez něj nejdou aktualizace na telefonech).
 - `scripts/` – build, validace, extrakce slidů, smoke test.

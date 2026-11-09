@@ -43,11 +43,13 @@ Uživatel pošle cesty k `.pptx/.ppsx/.pdf` (+ případně výpisky). Postup:
   (nový předmět = minor) a spusť `node scripts/release.mjs`. Nakonec zkontroluj živý `version.json`. Pokud ověření selže, nevydávej a řekni to.
 - `node scripts/release.mjs` (bez přepínačů) = sestaví PC+Android+iOS → nahraje instalátory na **GitHub Releases** (`scripts/publish-release.mjs`)
   → nasadí web na **GitHub Pages** (`scripts/deploy-web.mjs`) včetně `version.json` a `subjects.json`.
+- **Co je nového:** před každým vydáním přidej nahoru do `CHANGELOG` v `src/app.js` krátký záznam (build bez něj spadne).
 - **Otázky/learning** se do nainstalovaných aplikací stáhnou samy při startu s internetem (`subjects.json`, uloží se do localStorage → offline).
   Stačí tedy vydat; přeinstalace není potřeba. `contentMinApp` v package.json = nejnižší verze appky, která nový formát obsahu umí.
 - **Nová verze aplikace** (změna `src/app.js`/designu) → zvýšit `version`. PC: stáhne se samo na pozadí (`Api.prepare`), lišta „připravená“ →
   „Restartovat teď“ (`Api.apply`) nebo tichá instalace po zavření okna (`/NORELAUNCH`). Android: nativní `UpdaterPlugin.java` stáhne APK
   v aplikaci a otevře instalaci. iPhone: service worker.
+- **Cache:** PC maže HTTP cache WebView2 při startu (`clear_http_cache`), iPhone má stránku network-first s fallbackem na cache. Seznam souborů pro service worker se bere z toho, co v buildu opravdu je (jeden 404 by shodil celou instalaci).
 - **Ukazatel v hlavičce** (`#net`): 1× po spuštění se zeptá GitHubu (`version.json`) → Aktuální / Offline / Nová verze (klik = aktualizovat).
 - **Git:** repo `Pavka24/biflovna` – větev `main` = zdrojáky (release.mjs sám commitne + pushne), `gh-pages` = web, Releases = instalátory.
   Starší releasy jde mazat (`gh release delete vX --cleanup-tag`), odkazy `latest/download` vedou vždy na nejnovější.

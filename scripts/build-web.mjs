@@ -58,6 +58,8 @@ const pwa = `<link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Biflovna">`;
 
+if (!appJs.includes(`v: "${pkg.version}"`)) throw new Error(`V src/app.js (CHANGELOG) chybí záznam pro verzi ${pkg.version}`);
+
 let html = r("src/index.html")
   .replace("<!--PWA-->", pwa)
   .replace("%%FAVICON%%", () => png("icon-64.png"))
@@ -83,17 +85,20 @@ fs.writeFileSync(path.join(OUT, "manifest.webmanifest"), JSON.stringify({
   start_url: "./", scope: "./", display: "standalone", orientation: "portrait",
   background_color: "#151B2A", theme_color: "#151B2A",
   icons: [
-    { src: "icons/icon-192.png", sizes: "192x192", type: "image/png" },
     { src: "icons/icon-512.png", sizes: "512x512", type: "image/png" },
     { src: "icons/maskable-192.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
     { src: "icons/maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
   ],
 }, null, 2));
 fs.writeFileSync(path.join(OUT, "sw.js"), `const C="biflovna-${pkg.version}";
-const F=["./","index.html","manifest.webmanifest","icons/icon-192.png","icons/icon-512.png","icons/maskable-512.png","icons/apple-touch-180.png"];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(F)).then(()=>self.skipWaiting()))});
+const F=${JSON.stringify(["./", "index.html", "manifest.webmanifest", ...fs.readdirSync(path.join(OUT, "icons")).map(f => "icons/" + f)])};
+// instalace bere soubory přímo ze sítě (GitHub Pages mají 10min HTTP cache, jinak by se pod novým názvem uložila stará stránka)
+self.addEventListener("install",e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(F.map(u=>new Request(u,{cache:"reload"})))).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
-self.addEventListener("fetch",e=>{if(e.request.method!=="GET")return;e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request).then(n=>{const c=n.clone();caches.open(C).then(x=>x.put(e.request,c));return n})).catch(()=>caches.match("index.html")))});
+self.addEventListener("fetch",e=>{const r=e.request;if(r.method!=="GET")return;
+  if(/(version|subjects)[.]json$/.test(new URL(r.url).pathname))return; // kontrola verze vždy ze sítě
+  if(r.mode==="navigate"){e.respondWith(Promise.race([fetch(r.url,{cache:"no-cache"}).then(n=>{if(n.ok){const c=n.clone();caches.open(C).then(x=>x.put("index.html",c))}return n}),new Promise((_,no)=>setTimeout(no,3000))]).catch(()=>caches.match("index.html")));return}
+  e.respondWith(caches.match(r,{ignoreSearch:true}).then(h=>h||fetch(r).then(n=>{const c=n.clone();caches.open(C).then(x=>x.put(r,c));return n})).catch(()=>caches.match("index.html")))});
 `);
 
 const kb = Math.round(Buffer.byteLength(html) / 1024);

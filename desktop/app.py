@@ -5,6 +5,7 @@ stáhne instalátor z GitHub Releases. Pak buď Api.apply() (tlačítko „Resta
 tiše spustí sám po zavření okna.
 """
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -32,6 +33,16 @@ def run_installer(relaunch: bool) -> None:
     if not relaunch:
         args.append("/NORELAUNCH")
     subprocess.Popen(args, creationflags=getattr(subprocess, "DETACHED_PROCESS", 0) | getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0))
+
+
+def clear_http_cache(storage: str) -> None:
+    """Smaže HTTP cache WebView2 (statistiky v Local Storage zůstanou).
+
+    Stránka se načítá pořád ze stejné adresy (127.0.0.1:42001), takže by po aktualizaci WebView2 ukázal
+    starou verzi z cache a ta by aktualizaci nabízela znovu a znovu.
+    """
+    for name in ("Cache", "Code Cache"):
+        shutil.rmtree(os.path.join(storage, "EBWebView", "Default", name), ignore_errors=True)
 
 
 class Api:
@@ -73,6 +84,7 @@ class Api:
 if __name__ == "__main__":
     storage = os.path.join(os.environ.get("APPDATA", os.path.expanduser("~")), APP)
     os.makedirs(storage, exist_ok=True)
+    clear_http_cache(storage)
     window = webview.create_window(
         APP,
         url=resource("www", "index.html"),

@@ -62,12 +62,13 @@ function applyTheme() {
 let S = null, ST = null, T = null, learnFor = null;
 
 function show(id) {
-  for (const v of ["home", "subject", "quiz", "result"]) $("#" + v).classList.toggle("hide", v !== id);
+  for (const v of ["home", "subject", "quiz", "result", "updates"]) $("#" + v).classList.toggle("hide", v !== id);
 }
 function go(hash, replace) {
   if (replace) location.replace(hash); else location.hash = hash;
 }
 function route() {
+  if (location.hash === "#/updates") { S = null; renderUpdates(); show("updates"); window.scrollTo(0, 0); return; }
   const [, , id, sub] = location.hash.split("/");
   if (!id) { S = null; renderHome(); show("home"); window.scrollTo(0, 0); return; }
   const s = SUBJECTS.find(x => x.id === id);
@@ -81,9 +82,28 @@ function route() {
   window.scrollTo(0, 0);
 }
 
+// ===================== CO JE NOVÉHO =====================
+// Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
+const CHANGELOG = [
+  { v: "1.2.3", added: ["Sekce Co je nového"], fixed: ["PC: aktualizace se po restartu už neopakuje dokola", "iPhone: aplikace správně pozná novou verzi a funguje i bez internetu"] },
+  { v: "1.2.2", added: [], fixed: ["Learning na mobilu: tabulky se vejdou do karty a lišta témat nepřekrývá text"] },
+  { v: "1.2.1", added: ["Ukazatel v hlavičce: online/offline a jestli máš nejnovější verzi"], fixed: [] },
+  { v: "1.2.0", added: ["Aktualizace přímo v aplikaci na PC a Androidu", "Nová ikona"], fixed: [] },
+  { v: "1.1.0", added: ["Verze pro iPhone", "Otázky a výpisky se stahují samy"], fixed: [] },
+];
+function renderUpdates() {
+  document.title = "Co je nového – Biflovna";
+  const list = (label, cls, items) => items.length ? `<p class="upd-label ${cls}">${label}</p><ul>${items.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : "";
+  $("#updates").innerHTML = `<a class="back" href="#/">${ic("back")}Všechny předměty</a>
+    <p class="eyebrow">Tvoje verze ${esc(APP_VERSION)}</p>
+    <h1 class="subject-title">Co je nového</h1>
+    ${CHANGELOG.map(c => `<article class="lc upd"><h2>Verze ${esc(c.v)}</h2>${list("Nové", "new", c.added)}${list("Opraveno", "fix", c.fixed)}</article>`).join("")}`;
+}
+
 // ===================== DOMŮ =====================
 function renderHome() {
   document.title = "Biflovna – studijní testy a výpisky";
+  $("#updLink").innerHTML = `<span class="subj-ic">${ic("news")}</span><span><b>Co je nového</b><small>Verze ${esc(APP_VERSION)} · přidané a opravené věci</small></span>${ic("arrow")}`;
   $("#subjects").innerHTML = SUBJECTS.map(s => {
     const sum = summary(s, loadSubjectState(s));
     const pct = Math.round(sum.seen / sum.total * 100);
@@ -304,6 +324,11 @@ async function offerUpdate(v) {
       catch (e) { b.disabled = false; b.textContent = "Zkusit znovu"; toast("Stažení se nepovedlo – zkontroluj internet."); }
       finally { h && h.remove && h.remove(); }
     });
+  } else if (IS_HOSTED()) {
+    updateBar(`Nová verze Biflovny ${v.version}`, "Stačí klepnout, nic se neinstaluje.", "Aktualizovat", async () => {
+      try { const r = await navigator.serviceWorker.getRegistration(); if (r) await r.update(); } catch (e) { /* načte se i bez toho */ }
+      location.reload();
+    });
   }
 }
 // ---- ukazatel v hlavičce: online/offline + jestli je to poslední verze (1× za spuštění dotaz na GitHub) ----
@@ -336,7 +361,7 @@ async function checkUpdates() {
         if (useContent(JSON.parse(JSON.stringify(list)))) { route(); toast("Otázky a výpisky byly aktualizovány"); }
       }
     }
-    if (newer(v.version, APP_VERSION) && !IS_HOSTED()) { NET.v = v; setNet("update", `Nová verze ${v.version}`); offerUpdate(v); }
+    if (newer(v.version, APP_VERSION)) { NET.v = v; setNet("update", `Nová verze ${v.version}`); offerUpdate(v); }
     else setNet("ok", `Aktuální · ${APP_VERSION}`);
   } catch (e) {
     updChecked = false;                                // nepovedlo se → zkusí se znovu, až bude síť

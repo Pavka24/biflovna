@@ -43,8 +43,12 @@ Uživatel pošle cesty k `.pptx/.ppsx/.pdf` (+ případně výpisky). Postup:
   → nasadí web na **GitHub Pages** (`scripts/deploy-web.mjs`) včetně `version.json` a `subjects.json`.
 - **Otázky/learning** se do nainstalovaných aplikací stáhnou samy při startu s internetem (`subjects.json`, uloží se do localStorage → offline).
   Stačí tedy vydat; přeinstalace není potřeba. `contentMinApp` v package.json = nejnižší verze appky, která nový formát obsahu umí.
-- **Nová verze aplikace** (změna `src/app.js`/designu) → zvýšit `version`; PC ukáže lištu a samo se přeinstaluje (desktop/app.py `Api.update`),
-  Android stáhne APK z Releases, iPhone se obnoví přes service worker.
+- **Nová verze aplikace** (změna `src/app.js`/designu) → zvýšit `version`. PC: stáhne se samo na pozadí (`Api.prepare`), lišta „připravená“ →
+  „Restartovat teď“ (`Api.apply`) nebo tichá instalace po zavření okna (`/NORELAUNCH`). Android: nativní `UpdaterPlugin.java` stáhne APK
+  v aplikaci a otevře instalaci. iPhone: service worker.
+- **Ukazatel v hlavičce** (`#net`): 1× po spuštění se zeptá GitHubu (`version.json`) → Aktuální / Offline / Nová verze (klik = aktualizovat).
+- **Git:** repo `Pavka24/biflovna` – větev `main` = zdrojáky (release.mjs sám commitne + pushne), `gh-pages` = web, Releases = instalátory.
+  Starší releasy jde mazat (`gh release delete vX --cleanup-tag`), odkazy `latest/download` vedou vždy na nejnovější.
 - Nikdy nevydávej verzi s nižším číslem než poslední na Releases. Odkazy: `https://github.com/pavka24/biflovna/releases/latest/download/<soubor>`.
 
 ## Build – poznámky k prostředí (Windows tohoto uživatele)

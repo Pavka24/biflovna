@@ -171,7 +171,8 @@ select{font:inherit;font-size:15px;background:var(--card);color:var(--text);bord
 .lc b{color:var(--text);font-weight:650}
 .lc li.hl{list-style:none;margin:8px 0 8px -20px;background:color-mix(in srgb,var(--c) 9%,transparent);border-left:3px solid var(--c);padding:8px 12px;border-radius:0 8px 8px 0}
 .lc code{font-family:Consolas,"Cascadia Mono",monospace;font-size:14px;color:var(--primary)}
-.lt{width:100%;border-collapse:collapse;margin:10px 0 12px;font-size:14px;font-variant-numeric:tabular-nums}
+.lt-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0 12px}
+.lt{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
 .lt th{text-align:left;font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border-strong);padding:8px 10px}
 .lt td{border-bottom:1px solid var(--border);padding:7px 10px}
 .lt tr:last-child td{border-bottom:0}
@@ -196,6 +197,14 @@ select{font:inherit;font-size:15px;background:var(--card);color:var(--text);bord
   h1{font-size:34px}.q{font-size:22px}.card{padding:20px}
   .stat{padding:12px}.stat b{font-size:22px}.stat span{font-size:12px;line-height:1.3;display:block}
   .tbar{grid-template-columns:120px 1fr 40px}.grid2{grid-template-columns:1fr}
+  .toc{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:8px 0;margin-bottom:8px}
+  .toc::-webkit-scrollbar{display:none}
+  .toc .tag{flex:none;white-space:nowrap}
+  .lc{padding:18px 14px;scroll-margin-top:64px}
+  .lc h2{font-size:20px}
+  .lt{font-size:13px}
+  .lt th{font-size:10.5px;letter-spacing:.02em;padding:6px 5px}
+  .lt td{padding:6px 5px}
 }
 @media (prefers-reduced-motion:reduce){*:active{transform:none!important}.ring .val{transition:none}}
 

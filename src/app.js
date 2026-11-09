@@ -112,6 +112,7 @@ function renderSubject(tab) {
     $("#toc").innerHTML = Object.entries(S.topics).map(([k, t]) => `<a href="#L-${k}" class="tag" style="--c:${t.c}">${esc(t.n)}</a>`).join("");
     $("#learnBody").innerHTML = S.learn || `<p class="hint">K tomuto předmětu zatím nejsou výpisky.</p>`;
     $$("#learnBody .lc").forEach(el => { const t = S.topics[el.id.slice(2)]; if (t) el.style.setProperty("--c", t.c); });
+    $$("#learnBody table.lt").forEach(t => { const w = document.createElement("div"); w.className = "lt-wrap"; t.replaceWith(w); w.append(t); });
   }
   if (tab === "test") renderStartPane();
 }

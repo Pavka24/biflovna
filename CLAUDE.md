@@ -39,6 +39,8 @@ Uživatel pošle cesty k `.pptx/.ppsx/.pdf` (+ případně výpisky). Postup:
    Výsledné 2 soubory jsou v `Instalace/`. Uživateli shrň: kolik otázek/témat, co bylo nejasné, a připomeň rozeslat nové soubory.
 
 ## Aktualizace (jak se nová verze dostane k lidem)
+- **Pravidlo od uživatele: po každé změně aplikace nebo obsahu vydej update sám, bez ptaní.** Ověř (validate, build, smoke test), zvyš patch verzi v `package.json`
+  (nový předmět = minor) a spusť `node scripts/release.mjs`. Nakonec zkontroluj živý `version.json`. Pokud ověření selže, nevydávej a řekni to.
 - `node scripts/release.mjs` (bez přepínačů) = sestaví PC+Android+iOS → nahraje instalátory na **GitHub Releases** (`scripts/publish-release.mjs`)
   → nasadí web na **GitHub Pages** (`scripts/deploy-web.mjs`) včetně `version.json` a `subjects.json`.
 - **Otázky/learning** se do nainstalovaných aplikací stáhnou samy při startu s internetem (`subjects.json`, uloží se do localStorage → offline).

@@ -86,6 +86,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.2.8", added: ["Přehlednější Learning: nadpisy, srovnávací rámečky, barevné klíčové pojmy"], fixed: ["Výpisky jsou srozumitelnější, hesla jsou celé krátké věty"] },
   { v: "1.2.7", added: [], fixed: ["Lepší ovládání a čitelnost na telefonu, v tmavém režimu sedí horní lišta", "Hlavička i domovská stránka se vejdou i na malé telefony", "Výběr počtu otázek už na iPhonu nepřibližuje stránku"] },
   { v: "1.2.6", added: ["Praktické otázky: výpočty podsítí, hledání poruch a volba kabelu nebo firewallu"], fixed: ["Vyřazené otázky typu barva vodiče nebo rok a odpovědi, které šly poznat bez učení"] },
   { v: "1.2.5", added: [], fixed: ["Přehlednější tabulky v Learningu, OSI se vejde na displej telefonu"] },

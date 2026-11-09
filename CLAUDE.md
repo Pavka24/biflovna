@@ -30,7 +30,7 @@ Uživatel pošle cesty k `.pptx/.ppsx/.pdf` (+ případně výpisky). Postup:
    - Vysvětlení = 1 krátká věta navíc (souvislost, mnemotechnika), ne zopakování odpovědi. Může být `null`.
    - Text otázky musí být v rámci tématu unikátní (podle něj se ukládají statistiky – **neměň texty existujících otázek zbytečně**, smaže to uživatelům historii u dané otázky).
 4. **Napiš Learning** – jedna karta na téma: `<div class="lc" id="L-<téma>"><h2>N · Název</h2>…</div>`.
-   Jen stručné výpisky bez omáčky: `<ul><li>` s `<b>` klíčovými pojmy, `<li class="hl">` pro to nejdůležitější,
+   Krátké, ale **celé věty, kterým rozumí i někdo bez přednášky** (žádné heslovité „DNS jména → IP“). Karta se člení `<h3>` nadpisy; `<ul><li>` s `<b>` klíčovými pojmy (barva tématu), `<li class="hl">` pro to nejdůležitější, `<div class="cmp">` se dvěma `<div>` (`yes`/`no` volitelně) na srovnání, `<div class="grid2">` na seznamy pojmů,
    tabulky `<table class="lt">` (řádek `class="g"` = doporučené/zelené, `class="r"` = nedoporučené/červené).
    Uvnitř šablonového řetězce nepoužívej zpětný apostrof ani `${`.
 5. **Ověř:** `node scripts/validate.mjs` (musí být 0 chyb, varování oprav), pak

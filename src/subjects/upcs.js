@@ -251,17 +251,27 @@ Biflovna.subject({
 ],
 
   learn: `
-    <div class="lc" id="L-zak" style="--c:#60a5fa"><h2>1 · Základní pojmy</h2><ul>
-      <li><b>Síť</b> = propojení uzlů (nodes / stanice), technicky: <b>přenosové médium + NIC</b> + další komponenty</li>
-      <li>Funkční PC = HW + OS · <b>funkční síť = HW + komunikační protokol</b></li>
-      <li>Princip přenosu: <b>PAKETY</b> (neucpat síť) · <b>ADRESY</b> (jednoznačné) · univerzální <b>PROTOKOL</b></li>
-      <li>Požadavky: množství, rychlost, spolehlivost, univerzálnost · Limity: rychlost média, různorodost, množství služeb, bezpečnost</li>
-      <li><b>Protokol</b> = předpis (SW), hierarchické vrstvy, nezávislý na implementaci. Funkce: detekce zařízení, atributy, začátek/konec paketu, formát, detekce+oprava chyb, ukončení</li>
-      <li><b>IPX/SPX</b>: Novell, <b>MAC</b> adresy, rychlý, cesta známá, jen LAN · <b>TCP/IP</b>: <b>IP</b> adresy, univerzální, hledá trasu, „rodina protokolů“</li>
-      <li><b>Přenosový</b> protokol (IP, IPX) přenese data · <b>aplikační</b> (HTTP, DNS…) je předá aplikaci</li>
-      <li>Kriminalita: od <b>2006</b> nejlukrativnější · k síti není potřeba „oprávnění“</li></ul></div>
+    <div class="lc" id="L-zak"><h2>1 · Základní pojmy</h2>
+      <h3>Co je počítačová síť</h3><ul>
+      <li><b>Síť</b> = propojení několika <b>uzlů</b> (nodes, stanic), které spolu komunikují.</li>
+      <li>Technicky ji tvoří <b>přenosové médium</b>, <b>síťová karta (NIC)</b> a další komponenty.</li>
+      <li>Umožňuje přenos dat a služby, například sdílení disků nebo tisk.</li>
+      <li class="hl">Funkční počítač = HW + operační systém. <b>Funkční síť = HW + komunikační protokol.</b></li></ul>
+      <h3>Jak se data přenáší</h3><ul>
+      <li><b>Pakety</b> – data se dělí na malé části, aby neucpala síť.</li>
+      <li><b>Adresy</b> – odesílatel i adresát musí být určeni jednoznačně.</li>
+      <li><b>Protokol</b> – univerzální pravidla, podle kterých přenos probíhá.</li>
+      <li><b>Požadavky:</b> množství, rychlost, spolehlivost, univerzálnost.</li>
+      <li><b>Limity:</b> rychlost média, různorodost, množství služeb, spolehlivost a bezpečnost.</li></ul>
+      <h3>Přenosový protokol</h3><ul>
+      <li>Je to <b>předpis (software)</b> pro navázání spojení a přenos dat. Dělí se do <b>hierarchických vrstev</b> a nezávisí na implementaci.</li>
+      <li>Umí: detekovat okolní zařízení, nastavit atributy, poznat začátek a konec paketu, určit formát paketu, najít a opravit chyby, ukončit komunikaci.</li></ul>
+      <div class="cmp"><div><strong>IPX/SPX</strong><p>Adresuje <b>MAC adresami</b> (sítě Novell). Je rychlý, protože cesta je předem známá. Funguje <b>jen v LAN</b> a dnes je na ústupu.</p></div>
+      <div><strong>TCP/IP</strong><p>Adresuje <b>IP adresami</b> a <b>hledá trasu</b>. Je univerzální, běží na něm celý Internet. Jde o celou „rodinu protokolů“.</p></div></div>
+      <ul><li class="hl"><b>Přenosový</b> protokol (IP, IPX) přenese data sítí. <b>Aplikační</b> protokol (HTTP, DNS…) je předá konkrétní aplikaci.</li></ul></div>
 
-    <div class="lc" id="L-osi" style="--c:#a78bfa"><h2>2 · OSI vs TCP/IP, TCP vs UDP</h2>
+    <div class="lc" id="L-osi"><h2>2 · OSI vs TCP/IP, TCP vs UDP</h2>
+      <h3>Vrstvy</h3>
       <table class="lt"><tr><th>Vrstva OSI</th><th>Co dělá</th><th>Prvek</th><th>TCP/IP</th></tr>
       <tr><td>7&nbsp;Aplikační<small>data</small></td><td>služby pro aplikace</td><td></td><td rowspan="3">Aplikační</td></tr>
       <tr><td>6&nbsp;Prezentační<small>data</small></td><td>formát, kódování, šifrování</td><td></td></tr>
@@ -270,125 +280,191 @@ Biflovna.subject({
       <tr><td>3&nbsp;Síťová<small>paket</small></td><td><b>IP</b>, směrování</td><td><b>router</b></td><td>Síťová</td></tr>
       <tr><td>2&nbsp;Linková<small>rámec</small></td><td><b>MAC</b>, rámce, CRC</td><td><b>switch</b>, NIC</td><td rowspan="2">Síťové rozhraní</td></tr>
       <tr><td>1&nbsp;Fyzická<small>bity</small></td><td>signál, médium</td><td><b>hub</b>, repeater</td></tr></table>
-      <ul><li>Síťová vrstva: IP, ARP, RARP, ICMP, IGMP, IGRP, IPSEC – <b>ve všech prvcích</b> · Transportní – <b>jen v koncových</b> zařízeních</li>
-      <li><b>TCP</b> = spojovaný, spolehlivý, pořadí, potvrzuje, po částech → WWW, e-mail, SSH</li>
-      <li><b>UDP</b> = bez spojení, ztráta/přehození/duplicita, celý blok v 1 datagramu → DNS, DHCP, VoIP, hry</li>
-      <li>Spojení = <b>IP + port + transportní protokol</b> · DNS používá TCP i UDP</li></ul></div>
+      <ul><li><b>Síťové rozhraní:</b> přístup k fyzickému médiu (Ethernet, Token Ring, FDDI).</li>
+      <li><b>Síťová vrstva:</b> adresace a směrování (IP, ARP, RARP, ICMP, IGMP, IGRP, IPSEC). Je <b>ve všech prvcích sítě</b>.</li>
+      <li><b>Transportní vrstva:</b> je <b>jen v koncových zařízeních</b>, přizpůsobuje síť potřebám aplikace.</li>
+      <li><b>Aplikační vrstva:</b> programy, které síť využívají (Telnet, FTP, HTTP, DHCP, DNS).</li></ul>
+      <h3>TCP nebo UDP</h3>
+      <div class="cmp"><div class="yes"><strong>TCP – spolehlivý</strong><p><b>Naváže spojení</b>, posílá data <b>po menších částech</b>, příjem <b>potvrzuje</b> a hlídá <b>pořadí</b>.</p><p>Použití: <b>WWW, e-mail, SSH</b>.</p></div>
+      <div class="no"><strong>UDP – jednoduchý</strong><p><b>Bez spojení</b>, celý blok v jednom datagramu. Data se mohou <b>ztratit, přehodit nebo dojít víckrát</b>.</p><p>Použití: <b>DNS, DHCP, VoIP, online hry</b>.</p></div></div>
+      <ul><li><b>Port</b> = domluvené číslo, které na jednom počítači rozliší aplikace.</li>
+      <li class="hl">Síťové spojení aplikace je určeno kombinací <b>IP adresa + port + transportní protokol</b>. DNS používá TCP i UDP.</li></ul></div>
 
-    <div class="lc" id="L-pro" style="--c:#f472b6"><h2>3 · Aplikační protokoly</h2>
-      <div class="grid2">
-      <div><b>DNS</b> jména → IP</div><div><b>DHCP</b> přidělení IP</div>
-      <div><b>HTTP</b> WWW</div><div><b>FTP / TFTP</b> soubory / jednoduše</div>
-      <div><b>SMTP</b> odeslání pošty</div><div><b>POP3</b> stažení · <b>IMAP</b> na serveru</div>
-      <div><b>Telnet</b> terminál · <b>SSH</b> zabezpečený</div><div><b>SNMP</b> správa zařízení</div>
-      <div><b>NTP</b> čas</div><div><b>SMB</b> Windows · <b>NFS</b> Unix</div>
-      <div><b>NTLM</b> ověření Windows</div><div><b>XMPP</b> Jabber · <b>IRC</b> chat</div>
-      <div><b>NNTP</b> news · <b>X11</b> okna Unix</div><div><b>WebDAV</b> soubory přes HTTP</div></div></div>
+    <div class="lc" id="L-pro"><h2>3 · Aplikační protokoly</h2>
+      <h3>Adresy a web</h3><div class="grid2">
+      <div><b>DNS</b> překládá doménová jména na IP adresy</div><div><b>DHCP</b> automaticky přiděluje IP adresy</div>
+      <div><b>HTTP</b> přenáší webové stránky (WWW)</div><div><b>WebDAV</b> rozšiřuje HTTP o práci se soubory</div></div>
+      <h3>Soubory</h3><div class="grid2">
+      <div><b>FTP</b> přenos souborů po síti</div><div><b>TFTP</b> jednoduchý přenos souborů</div>
+      <div><b>SMB</b> sdílení souborů a tiskáren ve Windows</div><div><b>NFS</b> sdílení vzdálených souborů, jako by byly lokální (Unix)</div></div>
+      <h3>Pošta</h3><div class="grid2">
+      <div><b>SMTP</b> odesílání e-mailů</div><div><b>POP3</b> stažení pošty ze serveru</div>
+      <div><b>IMAP</b> práce se zprávami přímo na serveru</div></div>
+      <h3>Správa a přístup</h3><div class="grid2">
+      <div><b>Telnet</b> vzdálený terminál, nezabezpečený</div><div><b>SSH</b> vzdálený terminál, <b>zabezpečený</b></div>
+      <div><b>SNMP</b> správa síťových zařízení</div><div><b>NTP</b> synchronizace přesného času</div>
+      <div><b>NTLM</b> ověřování (autentizace) ve Windows</div><div><b>X11</b> zobrazení oken grafických programů v Unixu</div></div>
+      <h3>Komunikace</h3><div class="grid2">
+      <div><b>XMPP</b> zprávy a sledování přítomnosti (Jabber)</div><div><b>IRC</b> jednoduchý chat po Internetu</div>
+      <div><b>NNTP</b> čtení a vkládání zpráv typu news</div></div></div>
 
-    <div class="lc" id="L-adr" style="--c:#34d399"><h2>4 · Adresace</h2>
+    <div class="lc" id="L-adr"><h2>4 · Adresace</h2>
       <table class="lt"><tr><th></th><th>MAC</th><th>IPv4</th><th>IPv6</th></tr>
       <tr><td>Typ</td><td>fyzická (karta)</td><td>logická</td><td>logická</td></tr>
       <tr><td>Bitů</td><td><b>48</b></td><td><b>32</b></td><td><b>128</b></td></tr>
       <tr><td>Počet</td><td>≈2,8×10¹⁴</td><td>≈4×10⁹</td><td>≈3×10³⁸</td></tr>
       <tr><td>Zápis</td><td>A0-48-1C-92-DB-CF</td><td>192.168.0.1</td><td>8× 4 hexa</td></tr></table>
-      <ul><li>Pravidlo: <b>nikdy dva uzly se stejnou adresou</b> · rozhraní může mít víc IP, stejná IP ne na víc rozhraních</li>
-      <li>MAC dnes: přeskok mezi sousedy, identifikace pro DHCP, filtrování/firewall, ověření (WiFi)</li>
-      <li>Proti nedostatku IPv4 (jen zmírňují): <b>DHCP</b>, <b>subnetting/CIDR</b>, <b>NAT/PAT</b> → řešení IPv6</li>
-      <li class="hl">Privátní: <b>10.0.0.0–10.255.255.255</b> · <b>172.16.0.0–172.31.255.255</b> · <b>192.168.0.0–192.168.255.255</b></li>
-      <li>Veřejná IP → dostupná z Internetu, nutný firewall · privátní → za <b>NAT routerem</b></li>
-      <li>Privátní odesílatel na veřejné síti → <b>zahozen</b> · ven jde přes <b>bránu (NAT)</b> · mimo masku → ignorováno</li>
-      <li><b>APIPA 169.254.x.x</b> (třída B) – když nepřijde DHCP; jen lokálně, DHCP hledá <b>každé 3 min</b></li>
-      <li>Proč IP, když MAC má víc kombinací? <b>MAC není hierarchická</b> → nejde podle ní směrovat</li></ul></div>
+      <ul><li class="hl"><b>Hlavní pravidlo:</b> v jednom okamžiku nesmí být v síti dva uzly se stejnou adresou.</li>
+      <li>Jedno rozhraní může mít <b>více IP adres</b>, ale stejná IP nesmí být na více rozhraních.</li></ul>
+      <h3>K čemu je MAC adresa</h3><ul>
+      <li>Je teoreticky neměnná, prakticky ji změnit jde.</li>
+      <li>Slouží pro <b>přeskok mezi sousedními uzly</b>, identifikaci zařízení pro <b>DHCP</b>, <b>filtrování a firewall</b> a ověření připojení (WiFi).</li>
+      <li><b>Proč tedy IP, když má MAC víc kombinací?</b> MAC není hierarchická, takže podle ní nejde hledat cestu mezi sítěmi.</li></ul>
+      <h3>Veřejné a privátní adresy</h3><ul>
+      <li class="hl">Privátní rozsahy: <b>10.0.0.0–10.255.255.255</b> · <b>172.16.0.0–172.31.255.255</b> · <b>192.168.0.0–192.168.255.255</b>. Všechno ostatní je veřejné.</li>
+      <li><b>Veřejná IP</b> je dostupná z celého Internetu, proto potřebuje kvalitní <b>firewall</b>.</li>
+      <li><b>Privátní IP</b> je jen pro vnitřní síť, od Internetu ji odděluje <b>NAT router</b>.</li>
+      <li>Paket s privátním odesílatelem se na veřejné síti <b>okamžitě zahodí</b>. Ven musí jít <b>přes bránu (NAT)</b>.</li>
+      <li>Pakety z adres mimo vnitřní rozsah (masku) se <b>ignorují</b>.</li></ul>
+      <h3>Nedostatek IPv4 a APIPA</h3><ul>
+      <li><b>DHCP, subnetting/CIDR a NAT/PAT</b> nedostatek jen zmírňují. Skutečné řešení je <b>IPv6</b>.</li>
+      <li><b>APIPA 169.254.x.x</b> (rozsah třídy B) si zařízení přidělí samo, když <b>nedostane adresu z DHCP</b>. Fungují jen lokální služby, ven se nedostane. DHCP dál hledá <b>každé 3 minuty</b>.</li></ul></div>
 
-    <div class="lc" id="L-msk" style="--c:#fbbf24"><h2>5 · Maska, brána, subnetting, DHCP</h2><ul>
-      <li>Parametry: <b>IP, maska, brána, DHCP, DNS</b></li>
-      <li>Maska 32 b: <b>1 = síť, 0 = počítač</b> · stejná síť = stejná maska + stejné první bity</li>
-      <li>10.10.10.x/24 ≠ 10.10.<b>11</b>.x → jiná síť → přes <b>router</b></li>
-      <li><b>Brána</b> = router ven, stejná pro celou síť, zvykem <b>.1</b></li>
-      <li>Každý půjčený bit: <b>2× víc podsítí, ½ velikost</b> · velikost = <b>256 − poslední oktet</b> · použitelné = velikost − 2</li></ul>
+    <div class="lc" id="L-msk"><h2>5 · Maska, brána, subnetting, DHCP</h2>
+      <ul><li>Každé zařízení potřebuje: <b>IP adresu, masku, bránu, adresu DHCP a adresu DNS</b>.</li></ul>
+      <h3>Maska a brána</h3><ul>
+      <li><b>Maska</b> má 32 bitů a určuje rozsah vnitřní sítě: <b>jedničky = síť, nuly = počítač</b>.</li>
+      <li>Zařízení v jedné síti musí mít <b>stejnou masku a stejné první bity IP adresy</b>, jinak spolu nekomunikují ani při fyzickém propojení.</li>
+      <li>Příklad: 10.10.10.x a 10.10.<b>11</b>.x s maskou /24 jsou <b>různé sítě</b>, komunikace musí jít přes <b>router</b>.</li>
+      <li><b>Brána</b> = adresa routeru, přes který jdou všechny požadavky mimo domácí síť. Bývá stejná pro celou síť a zvykem je <b>.1</b> na konci.</li></ul>
+      <h3>Subnetting</h3><ul>
+      <li>Každý „půjčený“ bit dá <b>2× víc podsítí o poloviční velikosti</b>.</li>
+      <li class="hl">Velikost podsítě = <b>256 − poslední oktet masky</b>. Použitelné adresy = <b>velikost − 2</b> (první je adresa sítě, poslední broadcast).</li></ul>
       <table class="lt"><tr><th>Prefix</th><th>Maska</th><th>Adres</th><th>Použit.</th><th>Podsítí z /24</th></tr>
       <tr><td>/24</td><td>.0</td><td>256</td><td>254</td><td>1</td></tr><tr><td>/25</td><td>.128</td><td>128</td><td>126</td><td>2</td></tr>
       <tr><td>/26</td><td>.192</td><td>64</td><td>62</td><td>4</td></tr><tr><td>/27</td><td>.224</td><td>32</td><td>30</td><td>8</td></tr>
       <tr><td>/28</td><td>.240</td><td>16</td><td>14</td><td>16</td></tr><tr><td>/29</td><td>.248</td><td>8</td><td>6</td><td>32</td></tr>
       <tr><td>/30</td><td>.252</td><td>4</td><td>2</td><td>64</td></tr></table>
-      <ul><li>192.168.1.0/24 na 4: <b>/26</b> → .0–63 · .64–127 · .128–191 · .192–255</li>
-      <li><b>DHCP</b> pozná zařízení podle <b>MAC</b> · dynamicky = stanice · staticky = servery, routery, switche · ručně jen výjimečně</li></ul></div>
+      <ul><li>Příklad: 192.168.1.0/24 na 4 podsítě = <b>/26</b>, rozsahy .0–63, .64–127, .128–191, .192–255.</li></ul>
+      <h3>DHCP</h3><ul>
+      <li>DHCP server pozná zařízení podle <b>MAC adresy</b> a přidělí mu IP z nastaveného rozsahu.</li>
+      <li><b>Dynamicky</b> dostávají adresy pracovní stanice, <b>staticky</b> servery, routery a switche. Ruční nastavení má být výjimka.</li></ul></div>
 
-    <div class="lc" id="L-dns" style="--c:#22d3ee"><h2>6 · DNS a URL</h2><ul>
-      <li>Typy adres: <b>IP, DNS, URL</b> (+ MAC) · DNS: jméno.doména…doména₁ (TLD vpravo)</li>
-      <li>TCP/IP jména „neumí“ → <b>DNS server</b> překládá jméno ↔ IP; odkazují na něj servery vyšších domén</li>
-      <li>Přes DNS vždy <b>pomalejší</b>, může být méně spolehlivé → víc DNS serverů</li>
-      <li>Čísla IP <b>neodpovídají</b> doménám · napadené DNS → podvodné stránky</li>
-      <li>Bezpečné DNS: <b>1.1.1.1 / 1.0.0.1</b> Cloudflare · <b>8.8.8.8 / 8.8.4.4</b> Google · EU <b>86.54.11.1/.201</b> (reklamy .13/.213, děti .11/.211)</li>
-      <li><b>URL</b> = víc služeb na 1 PC; umí server + protokol + jméno/heslo + port + cesta; vznikla kvůli <b>WWW</b></li>
+    <div class="lc" id="L-dns"><h2>6 · DNS a URL</h2>
+      <h3>DNS</h3><ul>
+      <li>Kromě MAC rozlišujeme adresy <b>IP, DNS a URL</b>. DNS má tvar jméno.doména…doména, <b>nejvyšší doména je vpravo</b>.</li>
+      <li>TCP/IP jména „neumí“, v paketu jsou jen IP adresy. <b>DNS server překládá jméno na IP</b> a odkazují na něj DNS servery vyšších domén.</li>
+      <li>Přístup přes jméno je <b>vždy pomalejší</b> (dotaz navíc) a může být méně spolehlivý, proto má oblast <b>více DNS serverů</b>.</li>
+      <li>Čísla v IP adrese <b>neodpovídají doménám</b>, žádný přímý vztah mezi nimi není.</li>
+      <li class="hl"><b>Napadené DNS</b> vrací jiné adresy a pošle uživatele na podvodné stránky. Používej zabezpečené DNS: Cloudflare <b>1.1.1.1</b>, Google <b>8.8.8.8</b>, evropské <b>86.54.11.1</b>.</li></ul>
+      <h3>URL</h3><ul>
+      <li>Vznikla, aby jeden počítač (jedna IP) mohl nabízet <b>více služeb</b>. Je nezbytná pro <b>WWW</b>.</li>
+      <li>Jako jediná určí <b>server, protokol, jméno a heslo, port i cestu k souboru</b>.</li>
       <li class="hl"><code>protokol://[jméno[:heslo]@]server[:port][cesta]</code></li></ul></div>
 
-    <div class="lc" id="L-prv" style="--c:#fb923c"><h2>7 · Aktivní a pasivní prvky</h2><ul>
-      <li><b>Pasivní</b> jen přenáší (kabely, zásuvky, patch panely, rozvaděče) · <b>aktivní</b> mění chování paketu</li></ul>
-      <table class="lt"><tr><th>Prvek</th><th>OSI</th><th>Klíčové</th></tr>
-      <tr><td><b>HUB</b></td><td>1</td><td>posílá <b>všem</b>, zpoždění 1 bit; 10 Mb: 5 segm. (4 huby), 100 Mb: 3 segm. (2 huby)</td></tr>
-      <tr><td><b>SWITCH</b></td><td>2</td><td>jen adresátovi podle <b>MAC</b>, nesdílené médium; managed: QoS, VLAN</td></tr>
-      <tr><td><b>ROUTER</b></td><td>3</td><td>spojuje <b>≥ 2 sítě</b> podle IP; „jednoruký“ = VLAN na 1 portu</td></tr>
-      <tr><td><b>REPEATER</b></td><td>1</td><td>opraví, zesílí → delší dosah</td></tr>
-      <tr><td>MODEM</td><td>–</td><td>media konvertor, analog → digitál (DSL)</td></tr>
-      <tr><td>WiFi / LiFi / PowerLine</td><td>–</td><td>UTP → rádio (2,4/5/10/60 GHz) / světlo / rozvody 230 V</td></tr></table>
-      <ul><li>Hub, switch, repeater, WiFi = <b>v rámci LAN</b> · router = <b>propojení sítí</b> · ad-hoc sítě: každý PC routuje sám</li></ul></div>
+    <div class="lc" id="L-prv"><h2>7 · Aktivní a pasivní prvky</h2>
+      <div class="cmp"><div><strong>Pasivní prvky</strong><p><b>Jen přenášejí</b> paket: kabely, zásuvky, konektory, patch panely, rozvaděče.</p></div>
+      <div><strong>Aktivní prvky</strong><p><b>Mění chování</b> paketu: hub, switch, router, repeater, media konvertor, firewall.</p></div></div>
+      <table class="lt"><tr><th>Prvek</th><th>OSI</th><th>Co dělá</th></tr>
+      <tr><td><b>HUB</b></td><td>1</td><td>obnoví signál a pošle ho <b>všemi porty</b>, provoz neřídí; zpoždění jen 1 bit</td></tr>
+      <tr><td><b>SWITCH</b></td><td>2</td><td>pošle data <b>jen na port adresáta</b> podle MAC; médium není sdílené</td></tr>
+      <tr><td><b>ROUTER</b></td><td>3</td><td><b>spojuje alespoň 2 sítě</b> a přenáší mezi nimi data podle IP</td></tr>
+      <tr><td><b>REPEATER</b></td><td>1</td><td>poškozený signál opraví a zesílí, tím <b>prodlouží dosah</b></td></tr>
+      <tr><td>MODEM</td><td>–</td><td>media konvertor: převede médium a většinou analog na digitál (DSL)</td></tr>
+      <tr><td>WiFi</td><td>–</td><td>převede signál z UTP na rádio (2,4 / 5 / 10 / 60 GHz)</td></tr>
+      <tr><td>LiFi</td><td>–</td><td>převede signál na světlo šířené vzduchem</td></tr>
+      <tr><td>PowerLine</td><td>–</td><td>přenáší data po rozvodech 230 V</td></tr></table>
+      <ul><li class="hl">Hub, switch, repeater a WiFi fungují <b>v rámci LAN</b>. Pouze <b>router propojuje sítě</b>.</li>
+      <li><b>Limit hubů:</b> síť 10 Mb/s max. 5 segmentů (4 huby), síť 100 Mb/s max. 3 segmenty (2 huby).</li>
+      <li><b>Managovatelný switch</b> umí QoS, shaping a VLAN.</li>
+      <li><b>„Jednoruký“ router</b> směruje mezi VLAN na jediném portu.</li>
+      <li>V <b>mobilních ad-hoc sítích</b> si každý počítač routuje sám.</li></ul></div>
 
-    <div class="lc" id="L-nat" style="--c:#f87171"><h2>8 · Služby: switch, router, NAT, PAT, firewall</h2><ul>
-      <li>Služby dnes spíš na <b>síťových prvcích</b> (router, switch, AP, NAS)</li>
-      <li><b>Switch (L2)</b>: <b>Backward Learning</b> (MAC↔port, neznámý cíl = jako hub) · <b>STP</b> (smyčky, brání broadcast storm, pomalé) · management, VLAN, SNMP</li>
-      <li><b>Router (L3)</b>: routing (tabulky), DNS, DHCP, management, <b>shaping/QoS</b>, <b>VPN</b> (šifrovaný kanál), NAT, PAT, firewall</li>
-      <li><b>NAT</b>: víc privátních → <b>1 veřejná IP</b>, překlad pod <b>náhodným portem</b>; komunikaci musí zahájit <b>vnitřní síť</b></li>
-      <li>Typy: Source (zdroj. IP) · Destination (cíl, hotspoty) · <b>Maškaráda 1:N</b> (nejčastější) · 1:1 · <b>CGNAT/NAT444 100.64.0.0/10</b></li>
-      <li>+ šetří IPv4, skrývá síť (není zásadní zabezpečení!) · − nelze zvenku dovnitř, problém se SW, energie</li>
-      <li><b>PAT</b> = podmnožina NAT, <b>L3+L4</b> (NAT jen L3); port <b>nastaví správce</b> (8080 → 192.168.0.101:8080), server se <b>statickou IP</b></li>
-      <li><b>Firewall</b> = kontrolní bod mezi sítěmi různé důvěryhodnosti</li></ul>
-      <table class="lt"><tr><th>Typ</th><th>Jak</th><th>+ / −</th></tr>
+    <div class="lc" id="L-nat"><h2>8 · Služby: switch, router, NAT, PAT, firewall</h2>
+      <h3>Služby switche (2. vrstva)</h3><ul>
+      <li><b>Backward Learning:</b> pamatuje si, na kterém portu je která MAC. Neznámý cíl pošle všem, chová se jako hub.</li>
+      <li><b>Spanning Tree (STP):</b> řeší smyčky v síti a brání <b>broadcast storm</b>. Nevýhodou je pomalost.</li>
+      <li>Případně: vzdálený <b>management</b>, <b>VLAN</b> (virtuální sítě), <b>SNMP</b> (správa a hlášení stavů).</li></ul>
+      <h3>Služby routeru (3. vrstva)</h3><ul>
+      <li><b>Routing:</b> určuje cestu paketů podle routovacích tabulek.</li>
+      <li><b>Shaping (QoS):</b> omezuje rychlost klientů.</li>
+      <li><b>VPN:</b> šifrovaný kanál přes nezabezpečené médium.</li>
+      <li>Dále <b>DNS, DHCP, management, NAT, PAT a firewall</b>.</li></ul>
+      <h3>NAT a PAT</h3><ul>
+      <li><b>NAT:</b> více zařízení s privátní adresou používá <b>jednu veřejnou IP</b>. Router si překlad uloží do tabulky pod <b>náhodným portem</b> a podle něj vrátí odpověď správnému počítači.</li>
+      <li class="hl">Komunikaci musí zahájit <b>vnitřní síť</b>, zvenku se na počítač uvnitř přes NAT spojit nejde.</li>
+      <li><b>Výhody:</b> šetří IPv4 adresy a skrývá vnitřní síť, ale <b>není to zásadní zabezpečení</b>.</li>
+      <li><b>Nevýhody:</b> zařízení nemají reálné spojení ven, těžko se blokují zvenku, problémy s některým SW, vyšší spotřeba.</li>
+      <li><b>Typy:</b> Source (mění zdrojovou IP) · Destination (mění cíl, hotspoty) · <b>Maškaráda 1:N</b> (nejčastější, domácnosti a firmy) · 1:1 (vyhrazená veřejná adresa) · CGNAT/NAT444 (překlad i uvnitř sítě poskytovatele, 100.64.0.0/10).</li>
+      <li><b>PAT:</b> podmnožina NAT, pracuje na <b>3. a 4. vrstvě</b> (NAT jen na 3.). Port <b>předem nastaví správce</b>, například 8080 → 192.168.0.101:8080. Cílový server potřebuje <b>statickou IP</b>.</li></ul>
+      <h3>Firewall</h3><ul>
+      <li>Kontrolní bod s pravidly, který řídí provoz <b>mezi sítěmi s různou důvěryhodností</b>. Doma stačí softwarový, ve firmě se zvažuje hardwarový.</li></ul>
+      <table class="lt"><tr><th>Typ</th><th>Co kontroluje</th><th>Plus / mínus</th></tr>
       <tr><td>Filtrování paketů</td><td>IP, porty, protokoly</td><td>rychlý / neanalyzuje obsah</td></tr>
-      <tr><td>Stavový</td><td>stav spojení</td><td>kontext / náročnější</td></tr>
-      <tr><td>Proxy</td><td>obsah na aplikační úrovni</td><td>hloubka / zpomaluje</td></tr>
-      <tr><td>NGFW</td><td>+ IDS/IPS, aplikace</td><td>komplexní / drahý</td></tr>
-      <tr><td>Obvodový</td><td>TCP handshake</td><td>rychlý / neanalyzuje obsah</td></tr>
-      <tr><td>Neuronový AI</td><td>anomálie, zero-day</td><td>proaktivní / drahý, fals. poplachy</td></tr>
-      <tr><td>Cloud FWaaS</td><td>služba v cloudu</td><td>levný start / závislost, poplatky</td></tr></table>
-      <ul><li>Bezpečnostní politika = pravidla + NAT, VPN, <b>IDS</b>, autentizace, šířka pásma · doma SW firewall, firma HW</li></ul></div>
+      <tr><td>Stavový</td><td>stav aktivních spojení</td><td>bere kontext / náročnější</td></tr>
+      <tr><td>Proxy</td><td>obsah na aplikační úrovni</td><td>hlubší analýza / zpomaluje</td></tr>
+      <tr><td>NGFW</td><td>firewall + IDS/IPS + aplikace</td><td>komplexní / drahý, složitý</td></tr>
+      <tr><td>Obvodový</td><td>TCP handshake a relace</td><td>rychlý / neanalyzuje obsah</td></tr>
+      <tr><td>Neuronový (AI)</td><td>anomálie, i zero-day útoky</td><td>proaktivní / drahý, falešné poplachy</td></tr>
+      <tr><td>Cloud (FWaaS)</td><td>služba v cloudu</td><td>levný start / závislost na konektivitě, poplatky</td></tr></table>
+      <ul><li><b>Bezpečnostní politika</b> = pravidla komunikace a k tomu NAT, VPN, IDS, autentizace a správa šířky pásma.</li></ul></div>
 
-    <div class="lc" id="L-kab" style="--c:#a3e635"><h2>9 · Kabeláž</h2><ul>
-      <li><b>Kabely a konektory = nejčastější zdroj poruch</b> · útlum roste s frekvencí, menším průměrem, délkou · přeslech = crosstalk</li>
-      <li>Koax 10 Mb/s · dvoulinka 1 Gb/s+, <b>100 m</b> · optika ~10 Gb/s+, km, drahé konvertory</li></ul>
+    <div class="lc" id="L-kab"><h2>9 · Kabeláž</h2>
+      <ul><li class="hl"><b>Kabely a konektory jsou nejčastější zdroj poruch.</b> Vyplatí se kvalitní projekt (strukturovaná kabeláž).</li>
+      <li><b>Útlum</b> (zeslabení signálu) roste s <b>frekvencí</b>, s <b>menším průměrem</b> kabelu a s <b>délkou</b>.</li>
+      <li><b>Crosstalk (přeslech)</b> = signál jednoho vodiče ruší signál v jiném.</li>
+      <li><b>Pasivní prvky:</b> ochranné jsou rozvaděče, záložní zdroje a ventilace; pomocné jsou spojky, zásuvky, lišty a patch panely.</li></ul>
+      <h3>Koaxiální kabel (10 Mb/s, 50 Ω, sběrnice)</h3>
       <table class="lt"><tr><th></th><th>Tenký koax</th><th>Tlustý koax</th></tr>
       <tr><td>Standard</td><td><b>10BASE-2</b> (RG-58)</td><td><b>10BASE-5</b> („Yellow“)</td></tr>
       <tr><td>Segment / síť</td><td><b>185 m</b> / 910 m</td><td><b>500 m</b> / 2 500 m</td></tr>
       <tr><td>Konektor</td><td><b>BNC</b> + T, I, terminátory</td><td><b>AUI</b></td></tr></table>
-      <ul><li>Oba 50 Ω, sběrnice, 10 Mb/s · T-konektory = těžko zjistitelné poruchy · zásuvka EAD</li>
-      <li>Dvoulinka: <b>4 páry</b>, různá délka zkrutu, <b>symetrické vedení</b> · lanko → k PC, drát → lišty</li>
-      <li>Značení <b>X/YTP</b>: před lomítkem kabel, za lomítkem páry · U nestíněný, F fólie, S opletení · STP = U/FTP, FTP = F/UTP</li></ul>
+      <ul><li>Tvoří ho vodič, plastová izolace, stínění opletením a vnější pouzdro.</li>
+      <li>U tenkého se na každé odbočce kabel přeruší <b>T-konektorem</b>, což způsobuje těžko zjistitelné poruchy.</li></ul>
+      <h3>Kroucená dvoulinka</h3><ul>
+      <li><b>4 páry</b> vodičů. <b>Zkroucení potlačuje rušení</b> a zvyšuje dosah, každý pár má jinou délku zkrutu.</li>
+      <li><b>Symetrické vedení:</b> obě žíly jsou rovnocenné a signál je rozdíl potenciálů mezi nimi.</li>
+      <li><b>Lanko</b> je ohebné, na kabely k PC. <b>Drát</b> je na pevné rozvody v lištách.</li>
+      <li><b>Značení X/YTP:</b> před lomítkem stínění kabelu, za lomítkem stínění párů. <b>U</b> = nestíněný, <b>F</b> = fólie, <b>S</b> = opletení. Staré STP = U/FTP, staré FTP = F/UTP.</li></ul>
       <table class="lt"><tr><th>Cat</th><th>Rychlost</th><th>MHz</th><th>Délka</th></tr>
       <tr><td>5</td><td>100 Mb/s</td><td>100</td><td>100 m</td></tr><tr class="g"><td>5e ✓</td><td>1 Gb/s</td><td>100</td><td>100 m</td></tr>
       <tr class="r"><td>6 ✗</td><td>1 Gb/s</td><td>250</td><td>100 m</td></tr><tr class="g"><td>6a ✓</td><td>10 Gb/s</td><td>500–625</td><td>100 m</td></tr>
       <tr class="r"><td>7 ✗</td><td>10 Gb/s</td><td>600</td><td>100 m</td></tr><tr><td>7a</td><td>15 Gb/s</td><td>1000</td><td>100 m</td></tr>
       <tr><td>8</td><td>25 Gb/s</td><td>2000</td><td><b>30 m</b></td></tr><tr><td>8a</td><td>40 Gb/s</td><td>2000</td><td><b>30 m</b></td></tr></table>
-      <ul><li>Cat.6/7 slepá kolej: chybí limit <b>Alien Crosstalk</b> (přeslech mezi kabely ve svazku) → 2006 Cat.6A · hodnotí se <b>přenosová rychlost</b></li>
-      <li>RJ45 = 8 kontaktů · RJ11 telefon (6, 2 nevyuž.) · RJ10 sluchátko (4) · Cat.7: GG45, TERA</li>
-      <li>Lisování: konektor <b>pojistkou od sebe</b>, krimpovací kleště, průchodka</li>
-      <li class="hl">T568B: <span class="pin w o">b-oranž</span> <span class="pin o">oranž</span> <span class="pin w g">b-zel</span> <span class="pin b">modrá</span> <span class="pin w b">b-modrá</span> <span class="pin g">zelená</span> <span class="pin w h">b-hnědá</span> <span class="pin h">hnědá</span> · T568A = prohozená zelená ↔ oranžová</li>
-      <li><b>Přímý</b> (B–B): PC ↔ switch · <b>Křížený</b> (A–B): PC ↔ PC, switch ↔ switch</li></ul></div>
+      <ul><li class="hl"><b>Doporučení:</b> běžně <b>Cat.5E</b>, pro náročné <b>Cat.6A</b>, případně Cat.8. Cat.6 a Cat.7 se nedoporučují.</li>
+      <li>Cat.6 a 7 jsou slepá kolej, protože jim chybí limit pro <b>Alien Crosstalk</b> (přeslech mezi sousedními kabely ve svazku). Proto v roce 2006 vznikla Cat.6A a výkon se hodnotí <b>přenosovou rychlostí</b>.</li></ul>
+      <h3>Konektory a zapojení</h3><ul>
+      <li><b>RJ45</b> má 8 kontaktů. <b>RJ11</b> je pro telefon (6 kontaktů, 2 nevyužité). <b>RJ10</b> je pro sluchátko (4 kontakty).</li>
+      <li><b>Přímý kabel</b> (oba konce stejně): PC ↔ switch.</li>
+      <li><b>Křížený kabel</b> (T568A na T568B): PC ↔ PC a switch ↔ switch.</li>
+      <li>T568B: <span class="pin w o">b-oranž</span> <span class="pin o">oranž</span> <span class="pin w g">b-zel</span> <span class="pin b">modrá</span> <span class="pin w b">b-modrá</span> <span class="pin g">zelená</span> <span class="pin w h">b-hnědá</span> <span class="pin h">hnědá</span>. T568A má prohozený zelený a oranžový pár.</li></ul></div>
 
-    <div class="lc" id="L-opt" style="--c:#38bdf8"><h2>10 · Optika</h2><ul>
-      <li><b>Nevodivý vlnovod</b>, světlo drží <b>úplný odraz</b> (Snellův zákon)</li>
-      <li><b>SMF</b> 9/125 μm, 1 mód, <b>laser</b>, dlouhé trasy, WDM · <b>MMF</b> 50 nebo 62,5/125 μm, <b>LED/VCSEL 850 nm</b>, krátké linky</li>
-      <li>Klíč = <b>útlum</b>: křemík ~<b>0,2 dB/km</b>, plast 50–100 dB/km, nad 1 700 nm ne</li>
-      <li>Okna: O 1260–1310 · E 1360–1460 · S 1460–1530 · <b>C 1530–1562</b> · L 1560–1625 · U &gt;1625 nm</li>
-      <li>Kabel 50–300 Kč/m → <b>pokládat víc vláken</b> · WDM/DWDM = víc „barev“ · slot <b>SFP</b></li>
-      <li>Význam roste v <b>MAN/WAN</b>, v LAN klesá · ~11 Tb/s DWDM na 80 km · ~900 km s EDFA</li>
-      <li>+ šířka pásma, nízký útlum, EM odolnost, izolace, bezpečnost (banky), malé rozměry · − drahé konvertory</li></ul></div>
+    <div class="lc" id="L-opt"><h2>10 · Optika</h2>
+      <ul><li><b>Optické vlákno</b> je nevodivý vlnovod. Světlo v něm drží <b>úplný odraz</b> na rozhraní dvou prostředí (Snellův zákon).</li></ul>
+      <div class="cmp"><div><strong>Jednovidové (SMF)</strong><p><b>8,5–9/125 μm</b>, jediný mód, zdroj <b>laser</b>. Na <b>dlouhé trasy</b> a WDM.</p></div>
+      <div><strong>Mnohovidové (MMF)</strong><p><b>50 nebo 62,5/125 μm</b>, zdroj <b>LED / VCSEL 850 nm</b>. Levnější, na <b>krátké linky</b> (datacentrum, kampus).</p></div></div>
+      <ul><li class="hl">Klíčový parametr je <b>útlum</b>: křemík asi <b>0,2 dB/km</b>, plast 50–100 dB/km. Nad 1 700 nm se vlákna nepoužívají.</li>
+      <li><b>Přenosová okna:</b> O 1260–1310 · E 1360–1460 · S 1460–1530 · <b>C 1530–1562</b> · L 1560–1625 · U nad 1625 nm.</li>
+      <li><b>Vlnový multiplex (WDM/DWDM)</b> přenáší víc „barev“ (vlnových délek) jedním vláknem.</li>
+      <li>K přenosu je potřeba <b>vysílač se zdrojem světla</b> a <b>detektor s přijímačem</b>. V routerech jsou pro optiku sloty <b>SFP</b>.</li>
+      <li>Kabel stojí 50–300 Kč/m, což je málo proti pokládce a aktivním prvkům. Proto se vždy <b>pokládá víc vláken</b>, než je potřeba.</li>
+      <li>Význam <b>roste v páteřních sítích MAN a WAN</b>, v LAN klesá kvůli bezdrátu.</li>
+      <li>Prakticky asi 11 Tb/s přes DWDM na 80 km, při 2,5 Gb/s asi 900 km se zesilovači EDFA.</li></ul>
+      <div class="cmp"><div class="yes"><strong>Výhody</strong><p>Velká šířka pásma, nízký útlum, odolnost proti EM rušení, elektrická izolace, bezpečnost (banky, státní správa), malé rozměry.</p></div>
+      <div class="no"><strong>Nevýhoda</strong><p><b>Drahé konvertory</b> a aktivní prvky.</p></div></div></div>
 
-    <div class="lc" id="L-wif" style="--c:#c084fc"><h2>11 · Bezdrát</h2><ul>
-      <li>Rychle a daleko, ale <b>méně spolehlivé a bezpečné</b></li>
-      <li>Rádio <b>30 Hz–1 GHz</b> (všesměr., AM/FM, IoT) · Mikrovlny <b>1–100 GHz</b> (přímá viditelnost, WiFi, 5G, GSM, satelity)</li>
-      <li><b>Nelicencované</b> (WiFi): bez ČTU, zdarma, nechráněné → směrové antény (Fresnelova zóna)</li>
-      <li>2,4 GHz vlna 12,5 cm (95 % pohltí voda) · 5 GHz 6 cm · <b>6 GHz ≠ WiFi 6</b> · 10 GHz bod–bod 34 Mb/s 40 km</li>
-      <li>Reálná rychlost <b>min. poloviční</b> (vzorkovací teorém)</li></ul>
+    <div class="lc" id="L-wif"><h2>11 · Bezdrát</h2>
+      <ul><li>Bezdrát se postaví <b>rychle a na velké vzdálenosti</b>, ale je <b>méně spolehlivý a méně bezpečný</b>.</li>
+      <li><b>Rádio 30 Hz – 1 GHz:</b> šíří se všesměrově (AM/FM, vysílačky, IoT).</li>
+      <li><b>Mikrovlny 1 – 100 GHz:</b> šíří se přímočaře, potřebují <b>přímou viditelnost</b> (WiFi, 5G, GSM, satelity).</li></ul>
+      <div class="cmp"><div><strong>Nelicencované (WiFi)</strong><p>Bez povolení ČTU a <b>zdarma</b>, ale kanál <b>nikdo nezaručí</b>. Rušení omezí směrové antény (pozor na Fresnelovu zónu).</p></div>
+      <div><strong>Licencované</strong><p>Přiděluje <b>ČTU</b>, frekvence je <b>chráněná</b>. Až 622 Mb/s, dosah asi 50 km. Kapacitu nesnižuje počet klientů.</p></div></div>
+      <h3>WiFi</h3><ul>
+      <li><b>2,4 GHz:</b> vlna 12,5 cm, z 95 % ji pohltí voda a organické látky (stromy, dřevo).</li>
+      <li><b>5 GHz:</b> vlna 6 cm, voda ji pohlcuje mnohem méně.</li>
+      <li><b>6 GHz:</b> nové pásmo, kanály se nepřekrývají. <b>Nezaměňovat s WiFi 6</b>, což je jen standard.</li>
+      <li><b>10 GHz:</b> jen spoje bod–bod, až 34 Mb/s, dosah až 40 km.</li>
+      <li>Reálná rychlost je podle vzorkovacího teorému <b>minimálně poloviční</b> proti nominální.</li></ul>
       <table class="lt"><tr><th></th><th>WiFi 5</th><th>WiFi 6 / 6E</th><th>WiFi 7</th></tr>
       <tr><td>Std.</td><td>802.11ac</td><td>802.11ax</td><td>802.11be</td></tr>
       <tr><td>Pásma</td><td>5</td><td>2,4+5 (/+6)</td><td>2,4+5+6</td></tr>
@@ -398,9 +474,13 @@ Biflovna.subject({
       <tr><td>Zabezp.</td><td>WPA2</td><td>WPA3</td><td>WPA4</td></tr>
       <tr><td>Novinka</td><td>40 MHz</td><td>TWT, BSS col., beamf.</td><td>MLO, Multi-RU, punct.</td></tr>
       <tr><td>Rok</td><td>2014</td><td>2019 / 2020</td><td>2024</td></tr></table>
-      <ul><li><b>MESH</b> = víc prvků jako 1 router (1 síť, název, heslo) · bezpečnost: <b>změnit výchozí nastavení</b></li>
-      <li><b>Licencované</b>: ČTU, chráněné, až 622 Mb/s, ~50 km, 3,5 a 7,5–38 GHz, nezávisí na počtu klientů</li>
-      <li><b>FSO</b>: laser/LED bod–bod ≤5 km, ≤1 250 Mb/s, bez licence, úzký svazek · nepřítel <b>hustá mlha</b> (déšť/sníh ne) → rádiová záloha <b>99,999 %</b> · RONJA · photophone 1880</li>
-      <li><b>VLC</b> = viditelné světlo LED, simplex · <b>LiFi</b> = rychle blikající LED, bez EM rušení</li></ul></div>
+      <ul><li><b>MESH:</b> více prvků se tváří jako jeden router (jedna síť, název, heslo). Klient se připojí k nejlepšímu signálu.</li>
+      <li class="hl"><b>Základní bezpečnostní zásada WiFi:</b> změnit výchozí nastavení zařízení.</li></ul>
+      <h3>Bezdrátová optika</h3><ul>
+      <li><b>FSO:</b> laser nebo LED vzduchem <b>bod–bod do 5 km</b>, až 1 250 Mb/s, bez licence. Úzký svazek se těžko odposlouchává, potřebuje přímou viditelnost.</li>
+      <li class="hl">Největší nepřítel FSO je <b>hustá mlha</b>, déšť ani sníh nevadí. S rádiovou zálohou dosáhne dostupnosti <b>99,999 %</b>.</li>
+      <li><b>VLC:</b> přenos dat viditelným světlem LED, většinou simplexně.</li>
+      <li><b>LiFi:</b> LED bliká tak rychle, že to oko nepostřehne. Nemá EM rušení a má nízkou spotřebu.</li>
+      <li>Historie: photophone (Bell, 1880), český projekt <b>RONJA</b>.</li></ul></div>
 `,
 });

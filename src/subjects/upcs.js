@@ -262,14 +262,14 @@ Biflovna.subject({
       <li>Kriminalita: od <b>2006</b> nejlukrativnější · k síti není potřeba „oprávnění“</li></ul></div>
 
     <div class="lc" id="L-osi" style="--c:#a78bfa"><h2>2 · OSI vs TCP/IP, TCP vs UDP</h2>
-      <table class="lt"><tr><th>OSI</th><th>Co dělá</th><th>Prvek</th><th>TCP/IP</th><th>Jednotka</th></tr>
-      <tr><td>7 Aplikační</td><td>služby pro aplikace</td><td></td><td rowspan="3">Aplikační</td><td rowspan="3">data</td></tr>
-      <tr><td>6 Prezentační</td><td>formát, kódování, šifrování</td><td></td></tr>
-      <tr><td>5 Relační</td><td>řízení relace</td><td></td></tr>
-      <tr><td>4 Transportní</td><td>doručení, řízení toku, <b>porty</b></td><td>TCP, UDP</td><td>Transportní</td><td>segment</td></tr>
-      <tr><td>3 Síťová</td><td><b>IP</b>, směrování</td><td><b>router</b></td><td>Síťová</td><td>paket</td></tr>
-      <tr><td>2 Linková</td><td><b>MAC</b>, rámce, CRC</td><td><b>switch</b>, NIC</td><td rowspan="2">Síťové rozhraní</td><td>rámec</td></tr>
-      <tr><td>1 Fyzická</td><td>signál, médium</td><td><b>hub</b>, repeater</td><td>bity</td></tr></table>
+      <table class="lt"><tr><th>Vrstva OSI</th><th>Co dělá</th><th>Prvek</th><th>TCP/IP</th></tr>
+      <tr><td>7&nbsp;Aplikační<small>data</small></td><td>služby pro aplikace</td><td></td><td rowspan="3">Aplikační</td></tr>
+      <tr><td>6&nbsp;Prezentační<small>data</small></td><td>formát, kódování, šifrování</td><td></td></tr>
+      <tr><td>5&nbsp;Relační<small>data</small></td><td>řízení relace</td><td></td></tr>
+      <tr><td>4&nbsp;Transportní<small>segment</small></td><td>doručení, řízení toku, <b>porty</b></td><td>TCP, UDP</td><td>Transportní</td></tr>
+      <tr><td>3&nbsp;Síťová<small>paket</small></td><td><b>IP</b>, směrování</td><td><b>router</b></td><td>Síťová</td></tr>
+      <tr><td>2&nbsp;Linková<small>rámec</small></td><td><b>MAC</b>, rámce, CRC</td><td><b>switch</b>, NIC</td><td rowspan="2">Síťové rozhraní</td></tr>
+      <tr><td>1&nbsp;Fyzická<small>bity</small></td><td>signál, médium</td><td><b>hub</b>, repeater</td></tr></table>
       <ul><li>Síťová vrstva: IP, ARP, RARP, ICMP, IGMP, IGRP, IPSEC – <b>ve všech prvcích</b> · Transportní – <b>jen v koncových</b> zařízeních</li>
       <li><b>TCP</b> = spojovaný, spolehlivý, pořadí, potvrzuje, po částech → WWW, e-mail, SSH</li>
       <li><b>UDP</b> = bez spojení, ztráta/přehození/duplicita, celý blok v 1 datagramu → DNS, DHCP, VoIP, hry</li>

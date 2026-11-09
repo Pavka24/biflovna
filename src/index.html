@@ -145,10 +145,10 @@
     </div>
     <div class="tbars" id="tbars"></div>
   </div>
-  <div class="seg filter" role="tablist">
-    <button data-f="all" class="on">Vše</button>
-    <button data-f="bad"><svg class="i"><use href="#i-x"/></svg>Chyby</button>
-    <button data-f="ok"><svg class="i"><use href="#i-check"/></svg>Správně</button>
+  <div class="seg filter" role="group" aria-label="Filtr odpovědí">
+    <button data-f="all" class="on" aria-pressed="true">Vše</button>
+    <button data-f="bad" aria-pressed="false"><svg class="i"><use href="#i-x"/></svg>Chyby</button>
+    <button data-f="ok" aria-pressed="false"><svg class="i"><use href="#i-check"/></svg>Správně</button>
   </div>
   <div class="rev" id="rev"></div>
 </section>

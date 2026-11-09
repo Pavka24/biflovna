@@ -55,6 +55,39 @@ Uživatel pošle cesty k `.pptx/.ppsx/.pdf` (+ případně výpisky). Postup:
   Starší releasy jde mazat (`gh release delete vX --cleanup-tag`), odkazy `latest/download` vedou vždy na nejnovější.
 - Nikdy nevydávej verzi s nižším číslem než poslední na Releases. Odkazy: `https://github.com/pavka24/biflovna/releases/latest/download/<soubor>`.
 
+## Pokračování na jiném počítači / v jiném sezení
+- **Repo:** `git clone https://github.com/Pavka24/biflovna`. Nemá nastavený remote (push jde přes token v `release.mjs`), stav ověřuj přes GitHub API nebo živý `version.json`. Aktuální číslo verze je v `package.json`, historie v `CHANGELOG` (`src/app.js`).
+- **V gitu NENÍ a je potřeba přenést ručně** (repo je veřejné, proto nikam nenahrávat):
+  - `signing/biflovna.jks` + `signing/keystore.properties` – **bez nich nejde vydat APK, které se nainstaluje přes stávající verzi**.
+  - Prezentace `.ppsx` (pošle uživatel), `Instalace/`, `dist/`, `build/` (vzniknou buildem).
+- **Nástroje:** Node, `~/.local/bin/uv.exe`, `npm install` v rootu. `%LOCALAPPDATA%\BiflovnaTools\` musí obsahovat `jdk`, `android-sdk`, `inno` (ISCC.exe), `gh\bin\gh.exe`.
+  GitHub přihlášení: `"%LOCALAPPDATA%\BiflovnaTools\gh\bin\gh.exe" auth login` (účet Pavka24). `release.mjs` je psaný pro Windows.
+- **Bez lokálních nástrojů** lze upravovat kód a obsah a commitovat, ale **nevydávat**: appky by se bez nové verze na Releases/Pages neaktualizovaly.
+
+### Workflow každé změny
+1. Úprava (`src/…`, obsah v `src/subjects/`).
+2. Zvýšit patch v `package.json` a přidat záznam nahoru do `CHANGELOG` (`{ v, added: [], fixed: [] }`, česky, krátce, jen to, co pozná uživatel; zobrazí se jako verze + Nové/Opraveno).
+3. `node scripts/validate.mjs` → `node scripts/build-web.mjs` → `uv … scripts/smoke_test.py`.
+4. U UI změn změřit reálné rozložení v šířce telefonu (viz níže), ne jen to, že prvek existuje.
+5. `node scripts/release.mjs` – **commitne sám** (zpráva `Biflovna X.Y.Z` + řádek `Co-Authored-By`), pushne `main`, nahraje Release a web. Ruční commit jen u změn bez vydání (např. dokumentace).
+6. Ověřit: živý `version.json`, `releases/latest`, SHA `main` = lokální `HEAD`, `git status` čistý. Uživateli napsat, co je ověřené a co ne (reálný telefon obvykle nemáme).
+
+### Jak dělat otázky (doplňuje postup importu výše)
+- Vycházet z přednášek; **rozpory ve slidech nahlas říct** (známé: Cat.6 400 vs 250 MHz, mikrovlny od 100 MHz vs 1 GHz, 6 GHz dva rozsahy, CGN překlep `100.64.0.10/10`, podsíť B překlep `.63`).
+- Co uživatel chce: otázky, které by **reálně mohly být v testu**. Definice a parametry z tabulek ano, k tomu výpočty podsítí, diagnostika poruch, volba řešení podle situace (kabel, vlákno, firewall, protokol) a „proč“.
+- Co nechce: barvy vodičů, roky a kuriozity, konkrétní IP adresy služeb, „jak držet konektor“.
+- Špatné odpovědi věrohodné a ze stejné oblasti, žádné zjevné nesmysly („Jen v tiskárnách“, „Dosah 1 m“), správná se nesmí poznat podle délky.
+- Max 200 na předmět. Změna textu otázky maže její statistiku; když stačí lepší špatné odpovědi, měň jen je. Otázky jsou řádky JSON polí, hromadné úpravy skriptem podle textu otázky.
+
+### Testování na tomto PC (poučení)
+- Testy přes pywebview pouštět **mimo obrazovku** (`x=-3000`) s časovým limitem (`threading.Timer` + `os._exit`), jinak uživateli zůstane viset bílé okno. Skripty dávat do scratchpadu.
+- Web bez iPhonu ověřit přes lokální server + WebView2. Service worker funguje jen na `localhost`/https a `IS_HOSTED()` je jen pro `github.io`, v testu ho zaregistruj ručně. `evaluate_js` po přenačtení stránky přes service worker může přestat odpovídat, výsledek si pak nech poslat stránkou na testovací server.
+- Šířka: okno o 15 px širší než cílová kvůli scrollbaru. Kontroluj 320 a 393 px, `scrollWidth` a pozice prvků.
+- Pozor na kolize CSS tříd: `.upd` je plovoucí lišta aktualizace. Před novou třídou ji vyhledej.
+
+### Design pluginy (Claude Code)
+`impeccable` (audit, polish, critique; detektor `impeccable detect --json`), `mobile-native` (viewport, dotyk, safe area), `emil-design-eng` + animační skills, `ui-ux-pro-max`, `design-taste-frontend` (spíš weby). Na jiném stroji je nainstaluj zvlášť, projekt na nich nezávisí.
+
 ## Build – poznámky k prostředí (Windows tohoto uživatele)
 - Python není v PATH → vždy `~/.local/bin/uv.exe run --no-project --python 3.13 ...`.
 - Nástroje jsou v `%LOCALAPPDATA%\BiflovnaTools` (JDK 21, Android SDK, Inno Setup). `scripts/release.mjs` si je najde sám.

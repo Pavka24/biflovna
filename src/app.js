@@ -49,6 +49,7 @@ let theme = store.get("biflovna.theme", null);
 function applyTheme() {
   const t = theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   document.documentElement.dataset.theme = t;
+  $$('meta[name="theme-color"]').forEach(m => m.content = t === "dark" ? "#0F0E0C" : "#FAF9F6");
   $("#bTheme").innerHTML = ic(t === "dark" ? "sun" : "moon");
   const m = document.querySelector('meta[name="theme-color"]');
   if (m) m.content = t === "dark" ? "#0F0E0C" : "#FAF9F6";
@@ -85,6 +86,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.2.7", added: [], fixed: ["Lepší ovládání a čitelnost na telefonu, v tmavém režimu sedí horní lišta", "Hlavička i domovská stránka se vejdou i na malé telefony", "Výběr počtu otázek už na iPhonu nepřibližuje stránku"] },
   { v: "1.2.6", added: ["Praktické otázky: výpočty podsítí, hledání poruch a volba kabelu nebo firewallu"], fixed: ["Vyřazené otázky typu barva vodiče nebo rok a odpovědi, které šly poznat bez učení"] },
   { v: "1.2.5", added: [], fixed: ["Přehlednější tabulky v Learningu, OSI se vejde na displej telefonu"] },
   { v: "1.2.4", added: [], fixed: ["Co je nového: záznamy se už nepřekrývají"] },
@@ -234,7 +236,7 @@ function renderResult() {
   renderReview("all");
 }
 function renderReview(f) {
-  $$("#result .filter button").forEach(b => b.classList.toggle("on", b.dataset.f === f));
+  $$("#result .filter button").forEach(b => { b.classList.toggle("on", b.dataset.f === f); b.setAttribute("aria-pressed", b.dataset.f === f); });
   $("#rev").innerHTML = T.items.map((it, j) => {
     const ok = it.chosen === it.ci; if (f === "ok" && !ok || f === "bad" && ok) return "";
     const t = S.topics[it.q[0]];

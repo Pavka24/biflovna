@@ -1,0 +1,25 @@
+# sestavené výstupy (instalátory jsou na GitHub Releases)
+node_modules/
+dist/
+build/
+Instalace/
+*.part
+__pycache__/
+
+# podpisový klíč APK – NIKDY do gitu (repo je veřejné)
+signing/
+*.jks
+*.keystore
+keystore.properties
+
+# Android – generované / lokální
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+android/capacitor-cordova-android-plugins/build/
+.idea/
+*.iml

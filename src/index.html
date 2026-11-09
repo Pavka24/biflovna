@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FAF9F6">
+<meta name="description" content="Biflovna – trénovací testy a stručné výpisky ke zkouškám. Funguje offline.">
+<title>Biflovna</title>
+<!--PWA-->
+<link rel="icon" type="image/png" href="%%FAVICON%%">
+<style>
+%%FONTS%%
+%%CSS%%
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-logo" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="m9 12.5 2 2 4-4.5"/></symbol>
+  <symbol id="i-net" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></symbol>
+  <symbol id="i-sigma" viewBox="0 0 24 24"><path d="M18 7V5a1 1 0 0 0-1-1H6.5a.5.5 0 0 0-.4.8l4.5 6a2 2 0 0 1 0 2.4l-4.5 6a.5.5 0 0 0 .4.8H17a1 1 0 0 0 1-1v-2"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></symbol>
+  <symbol id="i-flask" viewBox="0 0 24 24"><path d="M10 2v7.31"/><path d="M14 9.3V1.99"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.52 16h12.96"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></symbol>
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6 3 20 12 6 21 6 3"/></symbol>
+  <symbol id="i-redo" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="m18 14 4 4-4 4"/><path d="m18 2 4 4-4 4"/><path d="M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-7.6a4 4 0 0 1 3.3-1.7H22"/><path d="M2 6h1.972a4 4 0 0 1 3.6 2.2"/><path d="M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></symbol>
+</svg>
+
+<div class="wrap">
+<header class="bar">
+  <a class="brand" href="#/" aria-label="Biflovna – domů"><img class="logo" src="%%LOGO%%" alt="" width="38" height="38"><span class="brand-name">Biflovna</span></a>
+  <button class="icon-btn" id="bTheme" aria-label="Přepnout světlý / tmavý režim" title="Světlý / tmavý režim"></button>
+</header>
+
+<!-- DOMŮ -->
+<section id="home" class="hide">
+  <p class="eyebrow">Tvoje studovna</p>
+  <h1>Co si dnes <em>zopakuješ?</em></h1>
+  <p class="lead">Vyber předmět. Testy s okamžitou zpětnou vazbou, stručné výpisky a statistiky, co ti jde a co ne. Všechno funguje offline.</p>
+  <div class="subjects" id="subjects"></div>
+  <p class="note center">Další předměty přibudou s novou verzí aplikace.</p>
+</section>
+
+<!-- PŘEDMĚT -->
+<section id="subject" class="hide">
+  <a class="back" href="#/">%%BACK%%Všechny předměty</a>
+  <p class="eyebrow" id="sEyebrow"></p>
+  <h1 class="subject-title" id="sName"></h1>
+  <p class="lead" id="sTeacher"></p>
+
+  <div class="seg" role="tablist">
+    <button class="on" data-t="test" role="tab" aria-selected="true"><svg class="i"><use href="#i-clip"/></svg>Test</button>
+    <button data-t="learn" role="tab" aria-selected="false"><svg class="i"><use href="#i-book"/></svg>Learning</button>
+  </div>
+
+  <div class="card" id="testPane">
+    <div class="stats">
+      <div class="stat"><b id="sTotal">0</b><span>otázek v sadě</span></div>
+      <div class="stat"><b id="sSeen">0</b><span>už jsi viděl</span></div>
+      <div class="stat"><b id="sAcc">–</b><span>úspěšnost celkem</span></div>
+    </div>
+    <p class="label">Témata <small>kliknutím vypneš / zapneš</small></p>
+    <div class="chips" id="chips"></div>
+    <div class="controls">
+      <label class="sel">Počet otázek
+        <select id="cnt"><option>10</option><option selected>20</option><option>30</option><option>50</option></select>
+      </label>
+      <div class="row">
+        <button class="btn ghost sm" id="bReset" title="Smaže statistiky tohoto předmětu"><svg class="i"><use href="#i-trash"/></svg>Vymazat statistiky</button>
+        <button class="btn outline" id="bWrong"><svg class="i"><use href="#i-redo"/></svg>Procvičit chyby <span class="count" id="nWrong">0</span></button>
+        <button class="btn primary" id="bStart"><svg class="i"><use href="#i-play"/></svg>Spustit test</button>
+      </div>
+    </div>
+    <p class="note kbd-note">Přednost mají otázky, které jsi ještě neviděl nebo jsi je naposled pokazil. Klávesy <span class="kbd">A</span>–<span class="kbd">D</span> nebo <span class="kbd">1</span>–<span class="kbd">4</span> odpověď, <span class="kbd">Enter</span> další otázka.</p>
+  </div>
+
+  <div id="learnPane" class="hide">
+    <nav class="toc" id="toc" aria-label="Témata"></nav>
+    <div id="learnBody"></div>
+  </div>
+</section>
+
+<!-- TEST -->
+<section id="quiz" class="hide">
+  <div class="qtop">
+    <span class="tag" id="qTag"></span>
+    <div class="qmeta"><span>Skóre <b id="qScore">0</b></span>
+      <button class="btn outline sm" id="bQuit"><svg class="i"><use href="#i-x"/></svg>Ukončit</button></div>
+  </div>
+  <div class="prog"><div id="qProg"></div></div>
+  <div class="dots" id="dots"></div>
+  <div class="card">
+    <p class="qnum" id="qNum"></p>
+    <h2 class="q" id="qText"></h2>
+    <div class="opts" id="opts"></div>
+    <div class="fb" id="fb" aria-live="polite"></div>
+    <div class="foot">
+      <span class="hint kbd-note" id="kHint"></span>
+      <button class="btn primary" id="bNext" disabled>Další<svg class="i"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- VÝSLEDEK -->
+<section id="result" class="hide">
+  <p class="eyebrow">Vyhodnocení</p>
+  <h1 style="margin-top:8px">Výsledek <em>testu</em></h1>
+  <p class="lead" id="rSub"></p>
+  <div class="card">
+    <div class="res">
+      <div class="ring">
+        <svg width="156" height="156" viewBox="0 0 156 156"><circle class="trk" cx="78" cy="78" r="68"/><circle class="val" id="ringVal" cx="78" cy="78" r="68" stroke-dasharray="427.26" stroke-dashoffset="427.26"/></svg>
+        <div class="in"><div><b id="rPct">0%</b><span id="rFrac"></span></div></div>
+      </div>
+      <div style="flex:1;min-width:240px">
+        <h2 class="grade" id="rGrade"></h2>
+        <p class="hint" id="rMsg" style="font-size:15.5px;margin:0 0 18px"></p>
+        <div class="row">
+          <button class="btn primary" id="bAgain"><svg class="i"><use href="#i-shuffle"/></svg>Nový test</button>
+          <button class="btn outline" id="bRetry"><svg class="i"><use href="#i-redo"/></svg>Zopakovat chyby</button>
+          <button class="btn outline" id="bHome"><svg class="i"><use href="#i-home"/></svg>Zpět na předmět</button>
+        </div>
+      </div>
+    </div>
+    <div class="tbars" id="tbars"></div>
+  </div>
+  <div class="seg filter" role="tablist">
+    <button data-f="all" class="on">Vše</button>
+    <button data-f="bad"><svg class="i"><use href="#i-x"/></svg>Chyby</button>
+    <button data-f="ok"><svg class="i"><use href="#i-check"/></svg>Správně</button>
+  </div>
+  <div class="rev" id="rev"></div>
+</section>
+</div>
+
+<script>
+%%JS%%
+</script>
+</body>
+</html>

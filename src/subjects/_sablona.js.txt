@@ -1,0 +1,28 @@
+/* ŠABLONA PŘEDMĚTU – zkopíruj jako src/subjects/<id>.js (soubory začínající "_" se do aplikace nedostanou)
+ * Otázka: [téma, "otázka", "správná odpověď", ["špatná 1", "špatná 2", "špatná 3"], "krátké vysvětlení" nebo null]
+ */
+Biflovna.subject({
+  id: "zkratka-predmetu",            // jen a-z, 0-9, pomlčky; NIKDY neměnit po vydání (podle id se ukládají statistiky)
+  name: "Celý název předmětu",
+  short: "ZKR",                       // 2–4 znaky, zobrazí se na kartě
+  teacher: "Jméno vyučujícího",
+  note: "Zkouška · přednášky 1–N",
+  color: "#0F766E",                   // akcent karty předmětu (viz paleta v CLAUDE.md)
+  icon: "book",                       // book | net | code | sigma | cpu | flask | globe | scale
+
+  topics: {
+    t1: { n: "Název tématu 1", c: "#3B82F6" },
+    t2: { n: "Název tématu 2", c: "#059669" },
+  },
+
+  questions: [
+    ["t1", "Otázka?", "Správná odpověď", ["Špatná A", "Špatná B", "Špatná C"], "Proč je to tak."],
+  ],
+
+  learn: `
+    <div class="lc" id="L-t1"><h2>1 · Název tématu 1</h2><ul>
+      <li><b>Pojem</b> = stručná definice</li>
+      <li class="hl">Zvýrazněný fakt na zapamatování</li></ul>
+      <table class="lt"><tr><th>A</th><th>B</th></tr><tr><td>…</td><td>…</td></tr></table></div>
+  `,
+});

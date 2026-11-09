@@ -1,0 +1,10 @@
+{
+  "appId": "cz.biflovna.app",
+  "appName": "Biflovna",
+  "webDir": "dist/www",
+  "android": {
+    "backgroundColor": "#FAF9F6",
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false
+  }
+}

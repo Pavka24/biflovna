@@ -85,6 +85,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.2.6", added: ["Praktické otázky: výpočty podsítí, hledání poruch a volba kabelu nebo firewallu"], fixed: ["Vyřazené otázky typu barva vodiče nebo rok a odpovědi, které šly poznat bez učení"] },
   { v: "1.2.5", added: [], fixed: ["Přehlednější tabulky v Learningu, OSI se vejde na displej telefonu"] },
   { v: "1.2.4", added: [], fixed: ["Co je nového: záznamy se už nepřekrývají"] },
   { v: "1.2.3", added: ["Sekce Co je nového"], fixed: ["PC: aktualizace se po restartu už neopakuje dokola", "iPhone: aplikace správně pozná novou verzi a funguje i bez internetu"] },

@@ -305,24 +305,46 @@ async function offerUpdate(v) {
     });
   }
 }
+// ---- ukazatel v hlavičce: online/offline + jestli je to poslední verze (1× za spuštění dotaz na GitHub) ----
+const NET = { s: "check", v: null, at: null };
+function setNet(s, text) {
+  NET.s = s; const el = $("#net"); if (!el) return;
+  el.dataset.s = s; el.querySelector("span").textContent = text;
+  el.title = s === "update" ? "Klepni pro aktualizaci" : s === "ok" ? "Máš nejnovější verzi" : s === "off" ? "Bez internetu – vše funguje z uloženého obsahu" : "Kontroluji GitHub…";
+}
+function netInfo() {
+  if (NET.s === "update" && NET.v) return offerUpdate(NET.v);
+  const c = store.get("biflovna.content", null), d = new Date(c && c.date > CONTENT.date ? c.date : CONTENT.date);
+  const when = NET.at ? `, zkontrolováno ${NET.at.toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" })}` : "";
+  toast(`Verze ${APP_VERSION} · obsah z ${d.toLocaleDateString("cs-CZ")}${NET.s === "off" ? " · offline" : when}`);
+}
 let updChecked = false;
 async function checkUpdates() {
-  if (updChecked || !UPDATE_URL || IS_HOSTED() || !navigator.onLine) return;
-  updChecked = true;
+  if (updChecked) return;
+  if (!UPDATE_URL || !navigator.onLine) { setNet("off", `Offline · ${APP_VERSION}`); return; }
+  updChecked = true; setNet("check", "Kontroluji…");
   try {
-    const ctl = new AbortController(); setTimeout(() => ctl.abort(), 6000);
+    const ctl = new AbortController(); setTimeout(() => ctl.abort(), 8000);
     const v = await (await fetch(UPDATE_URL + "version.json?t=" + Date.now(), { cache: "no-store", signal: ctl.signal })).json();
+    NET.at = new Date();
     const cur = store.get("biflovna.content", null), have = cur && cur.date > CONTENT.date ? cur : CONTENT;
-    if (v.contentHash !== have.hash && v.contentDate > have.date && !newer(v.minApp || "0.0.0", APP_VERSION)) {
+    if (!IS_HOSTED() && v.contentHash !== have.hash && v.contentDate > have.date && !newer(v.minApp || "0.0.0", APP_VERSION)) {
       const list = await (await fetch(UPDATE_URL + "subjects.json?h=" + v.contentHash, { cache: "no-store" })).json();
       if (Array.isArray(list) && list.length) {
         store.set("biflovna.content", { hash: v.contentHash, date: v.contentDate, minApp: v.minApp || "0.0.0", subjects: list });
         if (useContent(JSON.parse(JSON.stringify(list)))) { route(); toast("Otázky a výpisky byly aktualizovány"); }
       }
     }
-    if (newer(v.version, APP_VERSION)) offerUpdate(v);
-  } catch (e) { /* offline / bez odpovědi – nevadí */ }
+    if (newer(v.version, APP_VERSION) && !IS_HOSTED()) { NET.v = v; setNet("update", `Nová verze ${v.version}`); offerUpdate(v); }
+    else setNet("ok", `Aktuální · ${APP_VERSION}`);
+  } catch (e) {
+    updChecked = false;                                // nepovedlo se → zkusí se znovu, až bude síť
+    setNet("off", `Offline · ${APP_VERSION}`);
+  }
 }
+window.addEventListener("online", () => checkUpdates());
+window.addEventListener("offline", () => { if (NET.s !== "update") setNet("off", `Offline · ${APP_VERSION}`); });
+document.addEventListener("click", e => { if (e.target.closest("#net")) netInfo(); });
 
 // ===================== START =====================
 document.addEventListener("DOMContentLoaded", () => {

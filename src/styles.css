@@ -260,3 +260,17 @@ body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-i
   background:var(--text);color:var(--bg);font-size:14px;font-weight:600;box-shadow:0 10px 30px -10px rgba(0,0,0,.4);transition:opacity .4s ease,transform .4s var(--ease)}
 @starting-style{.toast{opacity:0;transform:translate(-50%,-8px)}}
 .toast.out{opacity:0;transform:translate(-50%,-8px)}
+
+/* ============ ukazatel online / offline / verze ============ */
+.bar-right{display:flex;align-items:center;gap:10px}
+.net{display:inline-flex;align-items:center;gap:8px;min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--border);background:var(--card);
+  color:var(--muted);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;transition:border-color .2s ease,color .2s ease,transform .16s var(--ease)}
+.net:active{transform:scale(.97)}
+.net i{width:8px;height:8px;border-radius:50%;background:var(--faint);flex:none}
+.net[data-s="ok"] i{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 20%,transparent)}
+.net[data-s="update"]{color:var(--text);border-color:#C9A86A}
+.net[data-s="update"] i{background:#C9A86A;box-shadow:0 0 0 3px rgba(201,168,106,.25)}
+.net[data-s="check"] i{animation:netpulse 1.2s ease-in-out infinite}
+@keyframes netpulse{50%{opacity:.3}}
+@media (max-width:420px){.net span{max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+@media (prefers-reduced-motion:reduce){.net[data-s="check"] i{animation:none}}

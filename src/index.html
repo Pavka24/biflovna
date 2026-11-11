@@ -14,6 +14,7 @@
 </style>
 </head>
 <body>
+<div class="sbar" aria-hidden="true"></div>
 <div class="scene" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-logo" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="m9 12.5 2 2 4-4.5"/></symbol>
@@ -76,12 +77,15 @@
       <div class="stat"><b id="sSeen">0</b><span>už jsi viděl</span></div>
       <div class="stat"><b id="sAcc">–</b><span>úspěšnost celkem</span></div>
     </div>
-    <p class="label">Témata <small>kliknutím vypneš / zapneš</small></p>
+    <div class="label"><span>Témata <small>kliknutím vypneš / zapneš</small></span><button class="btn ghost sm" id="bAllTopics">Zrušit výběr</button></div>
     <div class="chips" id="chips"></div>
     <div class="controls">
-      <label class="sel">Počet otázek
-        <select id="cnt"><option>10</option><option selected>20</option><option>30</option><option>50</option></select>
-      </label>
+      <div class="sel"><span id="cntLabel">Počet otázek</span>
+        <div class="cnt" id="cnt" role="group" aria-labelledby="cntLabel">
+          <button data-n="10">10</button><button data-n="20">20</button><button data-n="30">30</button><button data-n="50">50</button><button data-n="9999">Vše</button>
+          <input id="cntIn" type="number" inputmode="numeric" min="1" max="999" placeholder="Vlastní" aria-label="Vlastní počet otázek">
+        </div>
+      </div>
       <div class="row">
         <button class="btn ghost sm" id="bReset" title="Smaže statistiky tohoto předmětu"><svg class="i"><use href="#i-trash"/></svg>Vymazat statistiky</button>
         <button class="btn outline hide" id="bResume"><svg class="i"><use href="#i-arrow"/></svg>Pokračovat v testu <span class="count" id="nResume"></span></button>
@@ -160,6 +164,12 @@
   </div>
   <div class="rev" id="rev"></div>
 </section>
+
+<dialog class="dlg" id="dlg" aria-labelledby="dlgT">
+  <h2 id="dlgT"></h2>
+  <p id="dlgP"></p>
+  <div class="row"><button class="btn outline" id="dlgNo">Zrušit</button><button class="btn primary" id="dlgOk"></button></div>
+</dialog>
 
 <nav class="dock hide" id="dock" aria-label="Předmět">
   <span class="thumb"></span>

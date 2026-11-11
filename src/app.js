@@ -44,6 +44,24 @@ function summary(s, st) {
   return { seen, acc: tot ? Math.round(ok / tot * 100) : null, wrong, total: s.questions.length };
 }
 
+// ===================== POČET OTÁZEK + POTVRZOVACÍ OKNO =====================
+const ALL = 9999;                                    // „Vše“ – ořízne se na počet otázek ve výběru
+let CNT = +store.get("biflovna.count", 20) || 20;
+function setCount(n, fromInput) {
+  CNT = Math.max(1, Math.min(ALL, Math.round(n) || 20)); store.set("biflovna.count", CNT);
+  let preset = false;
+  $$("#cnt button").forEach(b => { const on = +b.dataset.n === CNT; preset = preset || on; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+  const inp = $("#cntIn"); inp.classList.toggle("on", !preset);
+  if (!fromInput) inp.value = preset ? "" : CNT;
+}
+function ask(title, text, okLabel, danger) {         // vlastní okno místo systémového confirm()
+  const d = $("#dlg");
+  if (!d || !d.showModal) return Promise.resolve(confirm(title + "\n" + text));
+  $("#dlgT").textContent = title; $("#dlgP").textContent = text;
+  $("#dlgOk").textContent = okLabel; $("#dlgOk").classList.toggle("danger", !!danger);
+  return new Promise(res => { d.returnValue = ""; d.onclose = () => res(d.returnValue === "ok"); d.showModal(); });
+}
+
 // ===================== MOTIV =====================
 let theme = store.get("biflovna.theme", null);
 function applyTheme() {
@@ -85,6 +103,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.3.1", added: ["Vlastní počet otázek v testu (nebo rovnou všechny)", "Tlačítko Vybrat vše / Zrušit výběr u témat testu"], fixed: ["iPhone: pruh s hodinami nahoře už ladí s tmavým režimem", "Hezčí výběr počtu otázek místo rozbalovacího seznamu", "Potvrzovací okna (ukončení testu, smazání statistik) ladí se vzhledem aplikace"] },
   { v: "1.3.0", added: ["Nový skleněný vzhled s plynulými animacemi a čitelnějším písmem", "Tlačítko Zpět v testu: můžeš se vracet k předchozím otázkám", "Témata jsou v každém testu zastoupená rovnoměrně", "Víc otázek na kategorie kabelů (Cat.5 až Cat.8)", "Rozdělaný test jde znovu otevřít tlačítkem Pokračovat v testu"], fixed: ["Pryč jsou výpočty podsítí a otázky na konkrétní IP adresy", "PC: nabídka nové verze se už neztratí při pomalejším startu", "Výběr témat pro PDF už nemění témata testu"] },
   { v: "1.2.10", added: ["Nové otázky na látku, která chyběla (firewally, NAT, kabely, optika, WiFi)"], fixed: ["Chybné a duplicitní otázky"] },
   { v: "1.2.9", added: ["Export výpisků do PDF: v Learningu si vybereš témata a uložíš je"], fixed: [] },
@@ -158,6 +177,8 @@ function renderStartPane() {
   $("#nWrong").textContent = sum.wrong;
   $("#bWrong").disabled = sum.wrong === 0;
   $("#bStart").disabled = pool.length === 0;
+  $("#bAllTopics").textContent = ST.off.size ? "Vybrat vše" : "Zrušit výběr";
+  setCount(CNT);
   const left = T ? T.items.filter(x => x.chosen === null).length : 0;
   $("#bResume").classList.toggle("hide", !left);
   if (left) $("#nResume").textContent = `${T.items.length - left} / ${T.items.length}`;
@@ -279,32 +300,38 @@ function renderReview(f) {
 // ===================== UDÁLOSTI (delegace) =====================
 document.addEventListener("click", e => {
   const el = e.target.closest("button,a"); if (!el) return;
-  if (el.matches(".chip[data-k]")) { const k = el.dataset.k; ST.off.has(k) ? ST.off.delete(k) : ST.off.add(k); saveSubjectState(ST); renderStartPane(); }
+  if (el.matches("#cnt button")) setCount(+el.dataset.n);
+  else if (el.matches(".chip[data-k]")) { const k = el.dataset.k; ST.off.has(k) ? ST.off.delete(k) : ST.off.add(k); saveSubjectState(ST); renderStartPane(); }
   else if (el.matches(".opt")) answer(+el.dataset.j, true);
   else if (el.matches("#dock button")) go(`#/s/${S.id}${el.dataset.t === "learn" ? "/learn" : ""}`, true);
   else if (el.matches("#result .filter button")) renderReview(el.dataset.f);
   else if (el.matches('#toc a')) { e.preventDefault(); document.getElementById(el.getAttribute("href").slice(1))?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
   else switch (el.id) {
     case "bTheme": theme = document.documentElement.dataset.theme === "dark" ? "light" : "dark"; store.set("biflovna.theme", theme); applyTheme(); break;
-    case "bStart": case "bAgain": startTest(pick(+$("#cnt").value)); break;
-    case "bWrong": startTest(pick(+$("#cnt").value, true)); break;
+    case "bStart": case "bAgain": startTest(pick(CNT)); break;
+    case "bWrong": startTest(pick(CNT, true)); break;
+    case "bAllTopics": if (ST.off.size) ST.off.clear(); else Object.keys(S.topics).forEach(k => ST.off.add(k)); saveSubjectState(ST); renderStartPane(); break;
+    case "dlgOk": $("#dlg").close("ok"); break;
+    case "dlgNo": $("#dlg").close(""); break;
     case "bRetry": startTest(shuffle(T.items.filter(it => it.chosen !== it.ci).map(it => it.q))); break;
-    case "bReset": if (confirm(`Smazat statistiky předmětu „${S.name}“?`)) { ST.stats = {}; saveSubjectState(ST); renderStartPane(); } break;
+    case "bReset": ask("Vymazat statistiky?", `Smaže se historie odpovědí předmětu „${S.name}“. Nejde to vrátit.`, "Vymazat", true).then(y => { if (y) { ST.stats = {}; saveSubjectState(ST); renderStartPane(); } }); break;
     case "bNext": step(1, true); break;
     case "bPrev": step(-1, true); break;
     case "bResume": go(`#/s/${S.id}/test`); break;
-    case "bQuit": if (confirm("Ukončit test? Odpovědi zůstanou ve statistikách.")) { T = null; go(`#/s/${S.id}`, true); } break;
+    case "bQuit": ask("Ukončit test?", "Odpovědi, které už máš, zůstanou ve statistikách.", "Ukončit test").then(y => { if (y) { T = null; go(`#/s/${S.id}`, true); } }); break;
     case "bHome": go(`#/s/${S.id}`, true); break;
   }
 });
 document.addEventListener("keydown", e => {
-  if ($("#quiz").classList.contains("hide") || e.ctrlKey || e.metaKey || e.altKey) return;
+  if ($("#quiz").classList.contains("hide") || $("#dlg").open || e.ctrlKey || e.metaKey || e.altKey) return;
   const k = e.key.toUpperCase(), map = { A: 0, B: 1, C: 2, D: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
   if (k in map) { answer(map[k]); e.preventDefault(); }
   else if (e.key === "Enter" || e.key === "ArrowRight") { step(1); e.preventDefault(); }
   else if (e.key === "ArrowLeft" || e.key === "Backspace") { step(-1); e.preventDefault(); }
 });
-window.addEventListener("hashchange", route);
+document.addEventListener("input", e => { if (e.target.id === "cntIn") { const v = parseInt(e.target.value, 10); if (v >= 1) setCount(v, true); } });
+document.addEventListener("click", e => { if (e.target.id === "dlg") e.target.close(""); });      // klepnutí mimo okno = zrušit
+window.addEventListener("hashchange", () => { if ($("#dlg").open) $("#dlg").close(""); route(); });
 matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => theme || applyTheme());
 
 // ===================== AKTUALIZACE (GitHub Pages + Releases) =====================
@@ -410,6 +437,7 @@ document.addEventListener("click", e => { if (e.target.closest("#net")) netInfo(
 document.addEventListener("DOMContentLoaded", () => {
   SUBJECTS.sort((a, b) => a.name.localeCompare(b.name, "cs"));
   loadCachedContent();
+  if (navigator.standalone) document.documentElement.classList.add("ios-app");   // iPhone z plochy: stavový řádek má vždy bílé písmo
   applyTheme();
   route();
   if ("serviceWorker" in navigator && IS_HOSTED()) navigator.serviceWorker.register("sw.js").catch(() => {});

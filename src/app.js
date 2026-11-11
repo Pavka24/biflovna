@@ -103,6 +103,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.3.3", added: ["Chytřejší výběr otázek: do nových testů se častěji vrací ty, které opakovaně kazíš"], fixed: ["PC: šedý posuvník okna nahradil tenký průsvitný, který ladí se vzhledem aplikace"] },
   { v: "1.3.2", added: ["Verze pro Linux (Mint, Ubuntu): instalační balíček .deb"], fixed: [] },
   { v: "1.3.1", added: ["Vlastní počet otázek v testu (nebo rovnou všechny)", "Tlačítko Vybrat vše / Zrušit výběr u témat testu"], fixed: ["iPhone: pruh s hodinami nahoře už ladí s tmavým režimem", "Hezčí výběr počtu otázek místo rozbalovacího seznamu", "Potvrzovací okna (ukončení testu, smazání statistik) ladí se vzhledem aplikace"] },
   { v: "1.3.0", added: ["Nový skleněný vzhled s plynulými animacemi a čitelnějším písmem", "Tlačítko Zpět v testu: můžeš se vracet k předchozím otázkám", "Témata jsou v každém testu zastoupená rovnoměrně", "Víc otázek na kategorie kabelů (Cat.5 až Cat.8)", "Rozdělaný test jde znovu otevřít tlačítkem Pokračovat v testu"], fixed: ["Pryč jsou výpočty podsítí a otázky na konkrétní IP adresy", "PC: nabídka nové verze se už neztratí při pomalejším startu", "Výběr témat pro PDF už nemění témata testu"] },
@@ -189,8 +190,13 @@ function renderStartPane() {
 function pick(n, onlyWrong) {
   let pool = S.questions.filter(q => !ST.off.has(q[0]));
   if (onlyWrong) pool = S.questions.filter(q => ST.stats[qid(q)]?.w);
-  // váha: neviděné a naposled pokažené otázky mají přednost
-  const scored = pool.map(q => { const s = ST.stats[qid(q)] || { s: 0, w: 0 }; const w = 1 / (1 + s.s) + (s.w ? 1.2 : 0); return { q, k: Math.pow(Math.random(), 1 / w) }; });
+  // váha: čím častěji otázku kazíš, tím spíš přijde znovu (podíl chyb + bonus za poslední pokus špatně);
+  // neviděná má váhu 1, opakovaně zvládnutá klesá k 0,15, takže se vrací jen občas
+  const scored = pool.map(q => {
+    const s = ST.stats[qid(q)];
+    const w = !s || !s.s ? 1 : 0.15 + 0.5 / (1 + s.s) + 2.6 * (s.s - (s.c || 0)) / (s.s + 1) + (s.w ? 0.8 : 0);
+    return { q, k: Math.pow(Math.random(), 1 / w) };
+  });
   scored.sort((a, b) => b.k - a.k);
   // témata se střídají dokola, takže jsou v testu zastoupená rovnoměrně
   const by = {}; scored.forEach(x => (by[x.q[0]] = by[x.q[0]] || []).push(x.q));

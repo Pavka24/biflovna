@@ -20,7 +20,7 @@ const ic = n => `<svg class="i" aria-hidden="true"><use href="#i-${n}"/></svg>`;
 const shuffle = a => { a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.random() * (i + 1) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 const qid = q => q[0] + "|" + q[1];
 const KH_ANS = `<span class="kbd">A</span>–<span class="kbd">D</span> vyber odpověď`;
-const KH_NEXT = `<span class="kbd">Enter</span> pokračovat`;
+const KH_NEXT = `<span class="kbd">Enter</span> pokračovat · <span class="kbd">←</span> zpět`;
 
 // ===================== ÚLOŽIŠTĚ =====================
 const store = {
@@ -49,10 +49,8 @@ let theme = store.get("biflovna.theme", null);
 function applyTheme() {
   const t = theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
   document.documentElement.dataset.theme = t;
-  $$('meta[name="theme-color"]').forEach(m => m.content = t === "dark" ? "#0F0E0C" : "#FAF9F6");
+  $$('meta[name="theme-color"]').forEach(m => m.content = t === "dark" ? "#020306" : "#F3F1EA");
   $("#bTheme").innerHTML = ic(t === "dark" ? "sun" : "moon");
-  const m = document.querySelector('meta[name="theme-color"]');
-  if (m) m.content = t === "dark" ? "#0F0E0C" : "#FAF9F6";
 }
 
 // ===================== ROUTER =====================
@@ -64,6 +62,7 @@ let S = null, ST = null, T = null, learnFor = null;
 
 function show(id) {
   for (const v of ["home", "subject", "quiz", "result", "updates"]) $("#" + v).classList.toggle("hide", v !== id);
+  $("#dock").classList.toggle("hide", id !== "subject");
 }
 function go(hash, replace) {
   if (replace) location.replace(hash); else location.hash = hash;
@@ -86,6 +85,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.3.0", added: ["Nový skleněný vzhled s plynulými animacemi a čitelnějším písmem", "Tlačítko Zpět v testu: můžeš se vracet k předchozím otázkám", "Témata jsou v každém testu zastoupená rovnoměrně", "Víc otázek na kategorie kabelů (Cat.5 až Cat.8)", "Rozdělaný test jde znovu otevřít tlačítkem Pokračovat v testu"], fixed: ["Pryč jsou výpočty podsítí a otázky na konkrétní IP adresy", "PC: nabídka nové verze se už neztratí při pomalejším startu", "Výběr témat pro PDF už nemění témata testu"] },
   { v: "1.2.10", added: ["Nové otázky na látku, která chyběla (firewally, NAT, kabely, optika, WiFi)"], fixed: ["Chybné a duplicitní otázky"] },
   { v: "1.2.9", added: ["Export výpisků do PDF: v Learningu si vybereš témata a uložíš je"], fixed: [] },
   { v: "1.2.8", added: ["Přehlednější Learning: nadpisy, srovnávací rámečky, barevné klíčové pojmy"], fixed: ["Výpisky jsou srozumitelnější, hesla jsou celé krátké věty"] },
@@ -132,7 +132,8 @@ function renderSubject(tab) {
   $("#sEyebrow").textContent = S.note || "";
   $("#sName").textContent = S.name;
   $("#sTeacher").textContent = S.teacher || "";
-  $$("#subject .seg button").forEach(b => { const on = b.dataset.t === tab; b.classList.toggle("on", on); b.setAttribute("aria-selected", on); });
+  $$("#dock button").forEach(b => { const on = b.dataset.t === tab; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+  $("#dock").style.setProperty("--at", tab === "learn" ? 2 : 1);
   $("#testPane").classList.toggle("hide", tab !== "test");
   $("#learnPane").classList.toggle("hide", tab !== "learn");
   if (tab === "learn" && learnFor !== S) {            // výpisky se vykreslí až při prvním otevření
@@ -157,6 +158,9 @@ function renderStartPane() {
   $("#nWrong").textContent = sum.wrong;
   $("#bWrong").disabled = sum.wrong === 0;
   $("#bStart").disabled = pool.length === 0;
+  const left = T ? T.items.filter(x => x.chosen === null).length : 0;
+  $("#bResume").classList.toggle("hide", !left);
+  if (left) $("#nResume").textContent = `${T.items.length - left} / ${T.items.length}`;
 }
 
 // ===================== TEST =====================
@@ -166,36 +170,39 @@ function pick(n, onlyWrong) {
   // váha: neviděné a naposled pokažené otázky mají přednost
   const scored = pool.map(q => { const s = ST.stats[qid(q)] || { s: 0, w: 0 }; const w = 1 / (1 + s.s) + (s.w ? 1.2 : 0); return { q, k: Math.pow(Math.random(), 1 / w) }; });
   scored.sort((a, b) => b.k - a.k);
-  return shuffle(scored.slice(0, n).map(x => x.q));
+  // témata se střídají dokola, takže jsou v testu zastoupená rovnoměrně
+  const by = {}; scored.forEach(x => (by[x.q[0]] = by[x.q[0]] || []).push(x.q));
+  const out = []; let groups = shuffle(Object.values(by));
+  while (out.length < n && groups.length) { for (const g of groups) { if (out.length < n) out.push(g.shift()); } groups = groups.filter(g => g.length); }
+  return shuffle(out);
 }
 function startTest(list) {
   if (!list.length) return;
   T = { items: list.map(q => { const opts = shuffle([q[2], ...q[3]]); return { q, opts, ci: opts.indexOf(q[2]), chosen: null }; }), i: 0, score: 0 };
   go(`#/s/${S.id}/test`);
 }
-function renderQ() {
-  const it = T.items[T.i], q = it.q, t = S.topics[q[0]];
+function renderQ(dir) {
+  const it = T.items[T.i], q = it.q, t = S.topics[q[0]], n = T.items.length;
   $("#qTag").textContent = t.n; $("#qTag").style.setProperty("--c", t.c);
-  $("#qNum").textContent = `Otázka ${T.i + 1} z ${T.items.length}`;
+  $("#qNum").textContent = `Otázka ${T.i + 1} z ${n}`;
   $("#qScore").textContent = T.score;
-  $("#qProg").style.transform = `scaleX(${T.i / T.items.length})`;
-  $("#dots").innerHTML = T.items.map((x, j) => `<span class="dot ${x.chosen === null ? (j === T.i ? "cur" : "") : (x.chosen === x.ci ? "ok" : "bad")}"></span>`).join("");
+  $("#qProg").style.transform = `scaleX(${T.items.filter(x => x.chosen !== null).length / n})`;
+  $("#dots").innerHTML = T.items.map((x, j) => `<span class="dot ${x.chosen === null ? "" : x.chosen === x.ci ? "ok" : "bad"}${j === T.i ? " cur" : ""}"></span>`).join("");
   $("#qText").textContent = q[1];
   $("#opts").innerHTML = it.opts.map((o, j) => `<button class="opt" data-j="${j}"><span class="L">${"ABCD"[j]}</span><span class="txt">${esc(o)}</span><span class="mk"></span></button>`).join("");
-  $("#fb").className = "fb"; $("#fb").innerHTML = "";
-  $("#bNext").disabled = true;
-  $("#bNext").innerHTML = (T.i === T.items.length - 1 ? "Vyhodnotit" : "Další") + ic("arrow");
-  $("#kHint").innerHTML = KH_ANS;
+  $("#bPrev").disabled = T.i === 0;
+  $("#bNext").innerHTML = (T.i === n - 1 ? "Vyhodnotit" : "Další") + ic("arrow");
+  if (it.chosen === null) { $("#fb").className = "fb"; $("#fb").innerHTML = ""; $("#bNext").disabled = true; $("#kHint").innerHTML = KH_ANS; }
+  else paintAnswer(it);
+  const body = $("#qBody"); body.classList.remove("in-r", "in-l");
+  if (dir) { void body.offsetWidth; body.classList.add(dir > 0 ? "in-r" : "in-l"); }   // jen po klepnutí, z klávesnice bez animace
 }
-function answer(j) {
-  const it = T.items[T.i]; if (it.chosen !== null) return;
-  it.chosen = j; const ok = j === it.ci; if (ok) T.score++;
-  const id = qid(it.q); const s = ST.stats[id] || { s: 0, c: 0, w: 0 };
-  s.s++; if (ok) { s.c++; s.w = 0; } else s.w = 1; ST.stats[id] = s; saveSubjectState(ST);
+function paintAnswer(it) {                           // zobrazí vyhodnocenou otázku (hned po odpovědi i při návratu zpět)
+  const ok = it.chosen === it.ci;
   $$("#opts .opt").forEach((b, k) => {
     b.disabled = true;
     if (k === it.ci) { b.classList.add("ok"); b.querySelector(".mk").innerHTML = ic("check"); }
-    else if (k === j) { b.classList.add("bad"); b.querySelector(".mk").innerHTML = ic("x"); }
+    else if (k === it.chosen) { b.classList.add("bad"); b.querySelector(".mk").innerHTML = ic("x"); }
     else b.classList.add("dim");
   });
   const fb = $("#fb");
@@ -203,16 +210,31 @@ function answer(j) {
   fb.innerHTML = (ok ? `<h3>${ic("check")}Správně</h3>`
     : `<h3>${ic("x")}Špatně</h3><p class="ans">Správná odpověď: <b>${"ABCD"[it.ci]}) ${esc(it.q[2])}</b></p>`)
     + (it.q[4] ? `<div class="ex">${ic("bulb")}<span>${esc(it.q[4])}</span></div>` : "");
-  $("#qScore").textContent = T.score;
-  $("#dots").children[T.i].className = "dot " + (ok ? "ok" : "bad");
-  $("#bNext").disabled = false; $("#bNext").focus({ preventScroll: true });
+  $("#bNext").disabled = false;
   $("#kHint").innerHTML = KH_NEXT;
-  fb.scrollIntoView({ block: "nearest" });
 }
-function next() {
-  if (!T || T.items[T.i].chosen === null) return;
-  if (T.i < T.items.length - 1) { T.i++; renderQ(); window.scrollTo(0, 0); }
-  else go(`#/s/${S.id}/result`, true);
+function answer(j, anim) {
+  const it = T.items[T.i]; if (it.chosen !== null || j >= it.opts.length) return;
+  it.chosen = j; const ok = j === it.ci; if (ok) T.score++;
+  const id = qid(it.q); const s = ST.stats[id] || { s: 0, c: 0, w: 0 };
+  s.s++; if (ok) { s.c++; s.w = 0; } else s.w = 1; ST.stats[id] = s; saveSubjectState(ST);
+  paintAnswer(it);
+  if (anim) { $("#opts").classList.add("just"); setTimeout(() => $("#opts")?.classList.remove("just"), 600); }
+  $("#qScore").textContent = T.score;
+  $("#qProg").style.transform = `scaleX(${T.items.filter(x => x.chosen !== null).length / T.items.length})`;
+  $("#dots").children[T.i].className = "dot cur " + (ok ? "ok" : "bad");
+  $("#bNext").focus({ preventScroll: true });
+  $("#fb").scrollIntoView({ block: "nearest" });
+}
+function step(d, anim) {                             // d = 1 další, -1 zpět na předchozí otázku
+  if (!T) return;
+  if (d < 0) { if (T.i === 0) return; T.i--; }
+  else {
+    if (T.items[T.i].chosen === null) return;
+    if (T.i === T.items.length - 1) return go(`#/s/${S.id}/result`, true);
+    T.i++;
+  }
+  renderQ(anim ? d : 0); window.scrollTo(0, 0);
 }
 
 // ===================== VÝSLEDEK =====================
@@ -257,9 +279,9 @@ function renderReview(f) {
 // ===================== UDÁLOSTI (delegace) =====================
 document.addEventListener("click", e => {
   const el = e.target.closest("button,a"); if (!el) return;
-  if (el.matches(".chip")) { const k = el.dataset.k; ST.off.has(k) ? ST.off.delete(k) : ST.off.add(k); saveSubjectState(ST); renderStartPane(); }
-  else if (el.matches(".opt")) answer(+el.dataset.j);
-  else if (el.matches("#subject .seg button")) go(`#/s/${S.id}${el.dataset.t === "learn" ? "/learn" : ""}`, true);
+  if (el.matches(".chip[data-k]")) { const k = el.dataset.k; ST.off.has(k) ? ST.off.delete(k) : ST.off.add(k); saveSubjectState(ST); renderStartPane(); }
+  else if (el.matches(".opt")) answer(+el.dataset.j, true);
+  else if (el.matches("#dock button")) go(`#/s/${S.id}${el.dataset.t === "learn" ? "/learn" : ""}`, true);
   else if (el.matches("#result .filter button")) renderReview(el.dataset.f);
   else if (el.matches('#toc a')) { e.preventDefault(); document.getElementById(el.getAttribute("href").slice(1))?.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
   else switch (el.id) {
@@ -268,8 +290,10 @@ document.addEventListener("click", e => {
     case "bWrong": startTest(pick(+$("#cnt").value, true)); break;
     case "bRetry": startTest(shuffle(T.items.filter(it => it.chosen !== it.ci).map(it => it.q))); break;
     case "bReset": if (confirm(`Smazat statistiky předmětu „${S.name}“?`)) { ST.stats = {}; saveSubjectState(ST); renderStartPane(); } break;
-    case "bNext": next(); break;
-    case "bQuit": if (confirm("Ukončit test? Odpovědi zůstanou ve statistikách.")) go(`#/s/${S.id}`, true); break;
+    case "bNext": step(1, true); break;
+    case "bPrev": step(-1, true); break;
+    case "bResume": go(`#/s/${S.id}/test`); break;
+    case "bQuit": if (confirm("Ukončit test? Odpovědi zůstanou ve statistikách.")) { T = null; go(`#/s/${S.id}`, true); } break;
     case "bHome": go(`#/s/${S.id}`, true); break;
   }
 });
@@ -277,7 +301,8 @@ document.addEventListener("keydown", e => {
   if ($("#quiz").classList.contains("hide") || e.ctrlKey || e.metaKey || e.altKey) return;
   const k = e.key.toUpperCase(), map = { A: 0, B: 1, C: 2, D: 3, "1": 0, "2": 1, "3": 2, "4": 3 };
   if (k in map) { answer(map[k]); e.preventDefault(); }
-  else if (e.key === "Enter") { next(); e.preventDefault(); }
+  else if (e.key === "Enter" || e.key === "ArrowRight") { step(1); e.preventDefault(); }
+  else if (e.key === "ArrowLeft" || e.key === "Backspace") { step(-1); e.preventDefault(); }
 });
 window.addEventListener("hashchange", route);
 matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => theme || applyTheme());
@@ -390,5 +415,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if ("serviceWorker" in navigator && IS_HOSTED()) navigator.serviceWorker.register("sw.js").catch(() => {});
   // pywebview API je dostupné až po události pywebviewready
   if (window.pywebview) setTimeout(checkUpdates, 800);
-  else { window.addEventListener("pywebviewready", () => checkUpdates(), { once: true }); setTimeout(checkUpdates, 1500); }
+  else {
+    window.addEventListener("pywebviewready", () => { if (NET.v) offerUpdate(NET.v); else checkUpdates(); }, { once: true });
+    setTimeout(checkUpdates, 1500);
+  }
 });

@@ -65,7 +65,7 @@ let html = r("src/index.html")
   .replace("%%FAVICON%%", () => png("icon-64.png"))
   .replace("%%LOGO%%", () => png("logo-96.png"))
   .replace("%%BACK%%", () => back)
-  .replace("%%FONTS%%", () => r("assets/fonts.css").trim())
+  .replace("%%FONTS%%", () => r("assets/fonts.css").replace(/@font-face\s*\{[^}]*Playfair[^}]*\}/g, "").trim())   // nadpisy jsou od 1.3.0 také v Interu
   .replace("%%CSS%%", () => minCss(r("src/styles.css")))
   .replace("%%JS%%", () => js.replace(/<\/script/gi, "<\\/script"));
 fs.writeFileSync(path.join(OUT, "index.html"), html);

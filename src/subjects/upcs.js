@@ -17,7 +17,7 @@ Biflovna.subject({
   osi:{n:"OSI, TCP/IP, TCP/UDP",           c:"#6366F1"},
   pro:{n:"Aplikační protokoly",            c:"#DB2777"},
   adr:{n:"Adresace MAC/IPv4/IPv6",         c:"#059669"},
-  msk:{n:"Maska, subnetting, DHCP",        c:"#D97706"},
+  msk:{n:"Maska, brána, DHCP",             c:"#D97706"},
   dns:{n:"DNS a URL",                      c:"#0891B2"},
   prv:{n:"Aktivní/pasivní prvky",          c:"#EA580C"},
   nat:{n:"Switch, router, NAT, firewall",  c:"#DC2626"},
@@ -27,7 +27,7 @@ Biflovna.subject({
 },
 
   questions: [
-// ---------- ZÁKLADNÍ POJMY (11) ----------
+// ---------- ZÁKLADNÍ POJMY (15) ----------
 ["zak","Co je počítačová síť?","Propojení několika uzlů (nodes), které spolu komunikují",["Jeden výkonný počítač se sdíleným diskem","Soubor programů pro přístup na Internet","Pouze kabeláž v budově"],"Uzlům se říká také stanice (workstations)."],
 ["zak","Co znamená zkratka NIC?","Network Interface Card – síťová karta",["Network Internet Connection","Node Identification Code","Network Integrated Controller"],null],
 ["zak","Funkční síť = ?","HW + komunikační protokol",["HW + operační systém","HW + DNS server","Kabely + router"],"Funkční PC = HW + OS, funkční síť = HW + komunikační protokol."],
@@ -39,8 +39,12 @@ Biflovna.subject({
 ["zak","Čím adresuje protokol IPX/SPX?","MAC adresami",["IP adresami","DNS jmény","URL adresami"],"Proto funguje jen v LAN (sítě Novell)."],
 ["zak","Jaký je rozdíl mezi přenosovým a aplikačním protokolem?","Přenosový přenese data sítí, aplikační je předá konkrétní aplikaci",["Aplikační přenese data sítí, přenosový je předá aplikaci","Přenosový funguje jen v LAN, aplikační jen na Internetu","Žádný, jsou to synonyma"],"Přenosový: IP, IPX. Aplikační: HTTP, DNS, FTP…"],
 ["zak","Lokální síť běží na IPX a potřebuje se připojit k Internetu. Jak se to podle přednášky běžně řeší?","Počítače provozují současně IPX i TCP/IP",["Router přeloží MAC adresy z IPX na DNS jména","IPX pakety se beze změny pošlou do Internetu","IPX se nahradí protokolem UDP na linkové vrstvě"],"Počítače a sítě mohou fungovat na několika protokolech současně."],
+["zak","Jak hledá cestu k adresátovi protokol TCP/IP?","Adresuje IP adresami a trasu k cíli hledá",["Adresuje MAC adresami a trasu zná předem","Adresuje DNS jmény a trasu určí server","Adresuje čísly portů a trasu nehledá"],"IPX/SPX má cestu předem známou, proto je rychlý, ale funguje jen v LAN."],
+["zak","Proč je protokol IPX/SPX rychlý?","Cesta k adresátovi je předem známá",["Data před odesláním vždy komprimuje","Pakety posílá bez adresy odesílatele","Používá jen optická přenosová média"],"Platí za to tím, že funguje jen v LAN."],
+["zak","Jak je přenosový protokol vnitřně uspořádaný?","Je rozdělený do hierarchických vrstev a nezávisí na implementaci",["Je jeden nedělitelný program svázaný s konkrétním hardwarem","Je rozdělený podle výrobců síťových karet a jejich ovladačů","Je uložený v aktivních prvcích a liší se podle délky segmentu"],null],
+["zak","Na kterém protokolu běží celý Internet?","TCP/IP",["IPX/SPX","SMB","NTLM"],"TCP/IP je celá „rodina protokolů“."],
 
-// ---------- OSI / TCP/IP (20) ----------
+// ---------- OSI / TCP/IP (18) ----------
 ["osi","Kolik vrstev má model OSI a kolik TCP/IP?","OSI 7, TCP/IP 4",["OSI 4, TCP/IP 7","OSI 7, TCP/IP 5","OSI 5, TCP/IP 3"],null],
 ["osi","Které jsou vrstvy modelu TCP/IP?","Síťové rozhraní, síťová, transportní, aplikační",["Fyzická, linková, síťová, aplikační","Fyzická, relační, prezentační, aplikační","Linková, síťová, relační, aplikační"],null],
 ["osi","Která vrstva OSI zajišťuje logickou (IP) adresaci a směrování?","3. síťová",["2. linková","4. transportní","1. fyzická"],null],
@@ -49,7 +53,6 @@ Biflovna.subject({
 ["osi","Která vrstva OSI řeší formát dat, kódování, kompresi a šifrování?","6. prezentační",["5. relační","7. aplikační","2. linková"],null],
 ["osi","Která vrstva OSI navazuje, řídí a ukončuje dialog mezi aplikacemi?","5. relační",["6. prezentační","4. transportní","7. aplikační"],null],
 ["osi","Jaká je jednotka dat na transportní vrstvě?","Segment",["Rámec","Paket","Bit"],"Transportní = segment, síťová = paket/datagram, linková = rámec, fyzická = bity."],
-["osi","Jaká je jednotka dat na linkové vrstvě?","Rámec",["Segment","Paket","Bit"],"Transportní = segment, síťová = paket/datagram, linková = rámec, fyzická = bity."],
 ["osi","Kterým vrstvám TCP/IP odpovídají vrstvy OSI 5, 6 a 7?","Aplikační",["Transportní","Síťové","Síťovému rozhraní"],"OSI 1+2 = síťové rozhraní, 3 = síťová, 4 = transportní, 5–7 = aplikační."],
 ["osi","Na které vrstvě TCP/IP jsou Ethernet, Token Ring a FDDI?","Síťové rozhraní",["Síťová","Transportní","Aplikační"],null],
 ["osi","Který protokol NEPATŘÍ na síťovou vrstvu TCP/IP?","HTTP",["ARP","ICMP","IGMP"],"Síťová vrstva: IP, ARP, RARP, ICMP, IGMP, IGRP, IPSEC."],
@@ -59,10 +62,9 @@ Biflovna.subject({
 ["osi","Online hra průběžně posílá polohu hráče. Proč se pro ni hodí UDP?","Počítá se se ztrátami a nevyplatí se znovu posílat staré zprávy",["Garantuje doručení všech zpráv ve správném pořadí","Před přenosem naváže spojení s každým z hráčů","Cílový uzel potvrzuje příjem každé části dat"],"Stejně tak VoIP. UDP dále DNS a DHCP (otázka–odpověď)."],
 ["osi","Na jednom serveru běží web i e-mail se stejnou IP adresou. Co odliší data pro každou službu?","Číslo portu",["MAC adresa síťové karty","Maska sítě serveru","Adresa brány v síti"],"Spojení určuje IP adresa, port a transportní protokol."],
 ["osi","Jak posílají data TCP a UDP?","TCP po menších částech, UDP celý blok v jednom datagramu",["TCP celý blok najednou, UDP po částech","Oba posílají jen po jednom bitu","Oba celý blok najednou"],null],
-["osi","Čím je jednoznačně určeno síťové spojení aplikace?","IP adresou + portem + transportním protokolem",["MAC adresou + IP adresou","IP adresou + maskou","DNS jménem + URL"],null],
 ["osi","Který transportní protokol používá DNS?","TCP i UDP",["Jen TCP","Jen UDP","Ani jeden, jen IP"],null],
 
-// ---------- APLIKAČNÍ PROTOKOLY (11) ----------
+// ---------- APLIKAČNÍ PROTOKOLY (16) ----------
 ["pro","Který protokol dynamicky přiděluje IP adresy?","DHCP",["DNS","SNMP","NTP"],null],
 ["pro","Který protokol slouží k odesílání e-mailu?","SMTP",["POP3","IMAP","SNMP"],null],
 ["pro","Který protokol slouží ke stahování pošty z poštovního serveru?","POP3",["SMTP","FTP","NTP"],"IMAP = práce se zprávami přímo na serveru."],
@@ -74,8 +76,13 @@ Biflovna.subject({
 ["pro","Uživatel chce nechávat e-maily na serveru a pracovat s nimi přímo tam. Který protokol to umožňuje?","IMAP",["POP3","SMTP","SNMP"],"POP3 poštu ze serveru získá, SMTP ji odesílá."],
 ["pro","K čemu slouží HTTP a k čemu FTP?","HTTP přenáší WWW dokumenty, FTP soubory po síti",["HTTP přenáší soubory, FTP WWW dokumenty po síti","HTTP odesílá e-maily, FTP synchronizuje čas v síti","HTTP spravuje uzly, FTP překládá jména na IP adresy"],null],
 ["pro","Který protokol sdílí vzdálené soubory v Unixu tak, jako by byly lokální?","NFS",["SMB","TFTP","NNTP"],"SMB sdílí soubory a tiskárny ve Windows, TFTP je jednoduchý přenos souborů."],
+["pro","Který protokol rozšiřuje HTTP o práci se soubory?","WebDAV",["TFTP","NFS","SMB"],null],
+["pro","Který protokol slouží k jednoduchému přenosu souborů?","TFTP",["WebDAV","SMB","NFS"],null],
+["pro","Který protokol zobrazuje okna grafických programů v Unixu?","X11",["SSH","Telnet","NFS"],null],
+["pro","K čemu slouží XMPP (Jabber)?","Zprávy a sledování přítomnosti",["Čtení a vkládání zpráv typu news","Správa síťových zařízení","Synchronizace přesného času"],"IRC je jednoduchý chat po Internetu."],
+["pro","Který protokol slouží ke čtení a vkládání zpráv typu news?","NNTP",["IRC","XMPP","SMTP"],null],
 
-// ---------- ADRESACE (21) ----------
+// ---------- ADRESACE (16) ----------
 ["adr","Kolik bitů má MAC, IPv4 a IPv6 adresa?","48, 32, 128",["32, 48, 128","48, 64, 128","64, 32, 256"],null],
 ["adr","Jak se zapisuje MAC adresa?","6 dvojic hexa číslic, např. A0-48-1C-92-DB-CF",["4 oktety dekadicky, např. 192.168.0.1","8 skupin po 4 hexa číslicích","Slovní jméno, např. www.czu.cz"],null],
 ["adr","Jak se zapisuje IPv6 adresa?","8 skupin po 4 hexa číslicích",["4 oktety dekadicky","6 dvojic hexa číslic","16 oktetů dekadicky"],"Např. 2001:0718:1c01:0016:0214:22ff:fec9:0ca5"],
@@ -86,41 +93,30 @@ Biflovna.subject({
 ["adr","K čemu se MAC adresa v TCP/IP dnes NEPOUŽÍVÁ?","Ke směrování paketů mezi sítěmi na Internetu",["K přeskoku mezi dvěma sousedními uzly","K identifikaci zařízení při přidělování IP z DHCP","K filtrování a firewallu"],"MAC: přeskok mezi sousedy, identifikace pro DHCP, filtrování/firewall, ověření připojení (WiFi)."],
 ["adr","Co platí o IP adresách a rozhraních?","Jedno rozhraní může mít víc IP, ale stejná IP nesmí být na víc rozhraních",["Stejná IP může být na víc rozhraních","Rozhraní smí mít jen jednu IP","IP adresa nemusí být v síti jednoznačná"],null],
 ["adr","Co NEPATŘÍ mezi nástroje proti nedostatku IPv4 adres?","DNS",["DHCP","Subnetting a CIDR","NAT a PAT"],"DHCP, subnetting/CIDR, NAT/PAT problém jen zmírňují – skutečné řešení je IPv6."],
-["adr","Která adresa je PRIVÁTNÍ?","172.20.5.1",["172.32.0.1","192.169.1.1","11.0.0.1"],"Privátní B: 172.16.0.0 – 172.31.255.255."],
-["adr","Která adresa je VEŘEJNÁ?","172.15.10.10",["10.200.1.1","192.168.50.5","172.31.255.254"],"172.15.x.x je těsně pod privátním rozsahem 172.16–172.31."],
-["adr","Jaký je rozsah privátních adres třídy A?","10.0.0.0 – 10.255.255.255",["172.16.0.0 – 172.31.255.255","192.168.0.0 – 192.168.255.255","100.0.0.0 – 100.255.255.255"],null],
-["adr","Jaký je rozsah privátních adres třídy B?","172.16.0.0 – 172.31.255.255",["172.0.0.0 – 172.255.255.255","172.16.0.0 – 172.16.255.255","10.0.0.0 – 10.255.255.255"],"16 × 65 536 adres."],
-["adr","Jaký je rozsah privátních adres třídy C?","192.168.0.0 – 192.168.255.255",["192.0.0.0 – 192.255.255.255","192.168.0.0 – 192.168.0.255","172.16.0.0 – 172.31.255.255"],"256 × 256 adres."],
 ["adr","Co platí o veřejné IP adrese?","Je dostupná z celého Internetu, větší riziko útoku, potřebuje kvalitní firewall",["Je dostupná jen z vnitřní sítě až k routeru, proto nepotřebuje firewall","Nepotřebuje žádný firewall, protože ji chrání NAT poskytovatele","Na veřejné síti se okamžitě zahodí a musí se překládat přes APIPA"],null],
 ["adr","Co se stane s paketem s privátní adresou odesílatele na veřejné síti?","Hned se zahodí",["Normálně se doručí","Router mu přidělí APIPA","Pošle se na všechny porty"],null],
 ["adr","Kam jde paket směřující ven z privátní sítě?","Na bránu (NAT)",["Na DNS server","Na všechny uzly v síti","Na DHCP server"],null],
-["adr","Kdy si zařízení přidělí APIPA adresu a jaký má rozsah?","Když nedostane IP od DHCP; 169.254.x.x",["Když se připojí k WiFi; 192.168.x.x","Při statické IP; 10.0.x.x","Když selže DNS; 127.0.x.x"],"Zařízení pak hledá DHCP dál – každé 3 minuty."],
-["adr","Co funguje, když má počítač APIPA adresu?","Lokální služby, ale komunikace mimo počítač ne",["Vše včetně Internetu","Jen Internet, lokální služby ne","Komunikace v LAN i přes bránu"],null],
 ["adr","MAC má víc kombinací než IPv4. Proč tedy potřebujeme IP adresy?","MAC adresy nejsou hierarchické, nejde podle nich hledat cestu mezi sítěmi",["Protože MAC adresy jsou příliš krátké","Protože MAC se nedá zapsat hexadecimálně","Protože MAC funguje jen bezdrátově"],"Proto IPX/SPX (adresuje MAC) funguje jen v LAN."],
+["adr","Jaký typ adresy je MAC a jaký IP?","MAC je fyzická adresa karty, IP je logická",["MAC je logická adresa, IP je fyzická adresa karty","Obě jsou fyzické adresy vypálené v kartě","Obě jsou logické adresy přidělené serverem"],null],
+["adr","Kde platí privátní IP adresa?","Jen ve vnitřní síti, od Internetu ji odděluje NAT router",["V celém Internetu, chrání ji jen firewall","Jen mezi dvěma routery poskytovatele","Jen v síti bez DHCP serveru a bez brány"],null],
 
-// ---------- MASKA, SUBNETTING, DHCP (20) ----------
+// ---------- MASKA, BRÁNA, DHCP (14) ----------
+["msk","Kdy si zařízení přidělí APIPA adresu a jaký má rozsah?","Když nedostane IP od DHCP; 169.254.x.x",["Když se připojí k WiFi; 192.168.x.x","Při statické IP; 10.0.x.x","Když selže DNS; 127.0.x.x"],"Zařízení pak hledá DHCP dál – každé 3 minuty."],
+["msk","Co funguje, když má počítač APIPA adresu?","Lokální služby, ale komunikace mimo počítač ne",["Vše včetně Internetu","Jen Internet, lokální služby ne","Komunikace v LAN i přes bránu"],null],
 ["msk","Jaké parametry síťového připojení má každé zařízení?","IP adresa, maska, brána, adresa DHCP, adresa DNS",["IP adresa, MAC, port, URL","Jen IP adresa a MAC","Maska, URL, heslo k WiFi"],null],
 ["msk","Co v masce označují jedničky a co nuly?","Jedničky část sítě, nuly část počítače",["Jedničky část počítače, nuly část sítě","Jedničky bránu, nuly broadcast","Jedničky veřejné adresy, nuly privátní"],"Maska má 32 bitů jako IPv4 a určuje rozsah vnitřní sítě."],
 ["msk","Co musí mít všechna zařízení v jedné síti, aby spolu komunikovala?","Stejnou masku a stejné první bity IP adresy",["Stejnou MAC adresu","Stejnou celou IP adresu","Jiné brány"],"Jinak nekomunikují, i když jsou fyzicky propojená."],
-["msk","Proč 10.10.10.5 s maskou 255.255.255.0 nekomunikuje přímo s 10.10.11.2?","Maska /24 určuje síť prvními 3 oktety a 10.10.10 ≠ 10.10.11 – jsou to různé sítě",["Protože 10.10.11.2 je veřejná adresa","Protože obě adresy jsou APIPA","Protože maska 255.255.255.0 zakazuje jakoukoli komunikaci"],"Pakety musí jít přes router (bránu)."],
 ["msk","Co je brána (gateway)?","Adresa routeru, přes který jdou všechny požadavky mimo „domácí“ síť",["Adresa DNS serveru, který překládá jména všech uzlů v domácí síti","MAC adresa switche, přes který jdou rámce mezi porty v jedné síti","Broadcast adresa sítě, na kterou se posílají pakety všem uzlům"],"Zvykem je jednička na konci, např. 10.30.0.1."],
-["msk","Router má uvnitř 10.10.0.1/255.255.255.0, PC mají 10.10.0.100, .110, .120. Jak nastavíš další PC?","10.10.0.130, maska 255.255.255.0, brána 10.10.0.1",["10.10.1.130, maska 255.255.255.0, brána 10.10.0.1","10.10.0.120, maska 255.255.255.0, brána 10.10.0.1","10.10.0.130, maska 255.255.255.0, brána 85.25.69.11"],"Volná adresa ze stejné sítě, stejná maska, brána = vnitřní IP routeru."],
-["msk","Patří při prefixu /26 adresy 192.168.1.130 a 192.168.1.190 do stejné podsítě?","Ano, obě leží v 192.168.1.128 – .191",["Ne, .130 leží v podsíti .128 – .159","Ne, .190 leží v podsíti .160 – .191","Ne, každá leží v jiné podsíti /26"],"Velikost /26 je 64 → podsítě .0, .64, .128, .192."],
-["msk","Kolik podsítí /28 vznikne rozdělením sítě /24?","16",["8","14","32"],"4 půjčené bity → 2⁴ = 16."],
-["msk","PC má 192.168.1.20/24 a bránu 192.168.2.1. V LAN komunikuje, ven ne. Proč?","Brána není ve stejné síti jako počítač",["Maska /24 neumožňuje komunikaci mimo síť","Adresa .20 je v síti /24 vyhrazená pro broadcast","Privátní adresa nemůže mít nastavenou bránu"],"Brána musí být adresa routeru z domácí sítě, tady 192.168.1.x."],
-["msk","Spoj mezi dvěma routery potřebuje právě 2 použitelné adresy. Který prefix zvolíš?","/30",["/29","/28","/27"],"/30 = 4 adresy − síť − broadcast = 2."],
-["msk","Kolik použitelných adres má podsíť /26?","62",["64","30","126"],"64 adres − adresa sítě − broadcast = 62."],
-["msk","Do podsítě potřebuješ připojit 50 počítačů. Která nejmenší podsíť ještě stačí?","/26",["/27","/28","/25"],"/27 má jen 30 použitelných adres, /26 má 62."],
-["msk","Jaká je broadcast adresa podsítě 192.168.1.64/26?","192.168.1.127",["192.168.1.63","192.168.1.128","192.168.1.191"],"Podsíť má 64 adres: .64 je síť, .127 poslední adresa = broadcast."],
-["msk","Rozděluješ 192.168.1.0/24 na 4 podsítě. Jaká bude maska?","255.255.255.192 (/26)",["255.255.255.224 (/27)","255.255.255.128 (/25)","255.255.255.240 (/28)"],"4 podsítě = 2 půjčené bity (2² = 4) → /26."],
 ["msk","Co udělá každý „půjčený“ bit při subnettingu?","Zdvojnásobí počet podsítí a způlí jejich velikost",["Zdvojnásobí velikost podsítí","Přidá jednu podsíť","Nezmění nic, jen masku"],null],
-["msk","Do které /26 podsítě patří adresa 192.168.1.200?","192.168.1.192 – .255",["192.168.1.128 – .191","192.168.1.200 – .255","192.168.1.64 – .127"],null],
-["msk","Jaká je adresa sítě pro 192.168.1.100/27?","192.168.1.96",["192.168.1.64","192.168.1.100","192.168.1.128"],"Velikost /27 = 32 → sítě 0, 32, 64, 96, 128… 100 leží v .96–.127."],
 ["msk","Proč nejsou v podsíti použitelné dvě adresy?","První je adresa sítě a poslední broadcast",["Jsou rezervované pro DNS a DHCP","Jsou rezervované pro APIPA","Patří vždy routeru a switchi"],null],
 ["msk","Podle čeho DHCP server identifikuje zařízení, kterému přiděluje IP?","Podle MAC adresy",["Podle DNS jména","Podle čísla portu","Podle URL"],null],
 ["msk","Komu DHCP přiděluje IP dynamicky a komu staticky?","Dynamicky pracovním stanicím, staticky serverům a aktivním prvkům",["Dynamicky routerům, staticky stanicím","Všem jen staticky","Všem jen dynamicky"],"Ruční konfigurace má být jen výjimka."],
+["msk","K čemu slouží subnetting?","K rozdělení jedné sítě na několik menších podsítí",["Ke spojení několika sítí do jedné větší","K překladu privátních adres na veřejnou","K automatickému přidělování IP adres"],"Patří k nástrojům, které zmírňují nedostatek IPv4 adres."],
+["msk","Kolik bitů má maska sítě?","32, stejně jako IPv4 adresa",["48, stejně jako MAC adresa","128, stejně jako IPv6 adresa","16, polovinu IPv4 adresy"],null],
+["msk","Jak často zařízení s APIPA adresou znovu hledá DHCP server?","Každé 3 minuty",["Každých 30 sekund","Každou hodinu","Jen po restartu"],null],
+["msk","Co se stane s pakety z adres mimo vnitřní rozsah daný maskou?","Ignorují se",["Pošlou se všem uzlům","Přeloží se na APIPA","Vrátí se DNS serveru"],null],
 
-// ---------- DNS a URL (12) ----------
+// ---------- DNS a URL (15) ----------
 ["dns","Jaké tři typy adres uzlu v síti existují (kromě MAC)?","IP, DNS, URL",["IP, MAC, port","DNS, URL, NAT","IPv4, IPv6, APIPA"],null],
 ["dns","Proč potřebujeme DNS?","TCP/IP jména „neumí“ – v paketu jsou jen IP adresy, DNS překládá jméno na IP",["Protože bez DNS nefunguje MAC adresace","Protože DNS přiděluje IP adresy","Protože DNS šifruje provoz"],null],
 ["dns","Je přístup přes DNS jméno rychlejší než přímo přes IP?","Ne, je vždy pomalejší (dotaz navíc) a může být méně spolehlivý",["Ano, je vždy rychlejší, protože DNS server si odpověď pamatuje","Je stejně rychlý, jméno se překládá až v cílovém počítači","Je rychlejší jen přes UDP, přes TCP je pomalejší než IP"],"Proto má každá oblast víc DNS serverů."],
@@ -133,8 +129,11 @@ Biflovna.subject({
 ["dns","Jaký je správný tvar URL?","protokol://[jméno[:heslo]@]adresa_serveru[:port][cesta]",["adresa_serveru://protokol[:port]@jméno","[jméno@]protokol:adresa_serveru/port","protokol@adresa_serveru://[cesta][:heslo]"],null],
 ["dns","Co je v URL ftp://jan:tajne@Alpha.czu.cz:2121/index.htm číslo 2121?","Port",["Heslo","Cesta k souboru","Jméno uživatele"],"protokol://[jméno[:heslo]@]server[:port][cesta]"],
 ["dns","Která část adresy www.tf.czu.cz je doména nejvyšší úrovně?","cz",["www","tf","czu"],"Tvar: jméno_počítače.doména_i…doména_1 – nejvyšší je vpravo."],
+["dns","Jak se uživatel může bránit podvrženým odpovědím DNS?","Používat zabezpečené DNS servery",["Vypnout na počítači DHCP","Používat jen pásmo 5 GHz","Změnit masku své sítě"],"Například Cloudflare, Google nebo evropské DNS."],
+["dns","Kdo při překladu odkazuje na DNS server dané domény?","DNS servery vyšších domén",["DHCP server místní sítě","Brána (router) cílové sítě","Switch s tabulkou MAC adres"],null],
+["dns","Proč má každá oblast více DNS serverů?","Překlad jména je krok navíc a může selhat, víc serverů zvyšuje spolehlivost",["Každý server umí přeložit jen jednu doménu nejvyšší úrovně","Jeden server smí obsloužit nejvýše jednu síť s maskou /24","Každý server přiděluje jiný rozsah IP adres pro stanice"],null],
 
-// ---------- AKTIVNÍ / PASIVNÍ PRVKY (13) ----------
+// ---------- AKTIVNÍ / PASIVNÍ PRVKY (17) ----------
 ["prv","Jaký je rozdíl mezi pasivním a aktivním prvkem?","Pasivní jen přenáší paket, aktivní mění jeho chování při přenosu",["Aktivní jen přenáší paket, pasivní ho mění","Pasivní pracuje na 3. vrstvě, aktivní na 1.","Pasivní prvky jsou bezdrátové, aktivní kabelové"],null],
 ["prv","Který prvek je PASIVNÍ?","Patch panel",["Switch","Router","Hub"],"Pasivní: kabely, zásuvky, konektory, patch panely, rozvaděče."],
 ["prv","Na které vrstvě OSI pracuje hub, switch a router?","Hub 1, switch 2, router 3",["Hub 2, switch 3, router 4","Hub 1, switch 3, router 2","Hub 2, switch 2, router 3"],null],
@@ -147,26 +146,27 @@ Biflovna.subject({
 ["prv","Co dělá REPEATER?","Poškozený signál opraví, zesílí a pošle dál – prodlouží dosah",["Spojuje dvě různé sítě a vybírá cestu podle IP adresy","Překládá privátní adresy na jednu veřejnou adresu (NAT)","Filtruje provoz podle MAC a posílá rámce jen adresátovi"],"Pracuje na 1. (fyzické) vrstvě."],
 ["prv","Co je MODEM?","Media konvertor – převede signál z jednoho média na jiné (často analog na digitál)",["Prvek 3. vrstvy, který směruje pakety mezi různými sítěmi","Pasivní prvek pro uchycení a ochranu kabelů v rozvaděči","Server, který zařízením přiděluje IP adresy z rozsahu"],"Např. DSL modem: telefonní linka → UTP."],
 ["prv","Co je PowerLine (HomePlug)?","Přenos dat po rozvodech 230 V",["Přenos dat světlem","Přenos dat po optice","Napájení switche přes UTP"],"LiFi = UTP → světlo vzduchem."],
-["prv","Chceš propojit síť 10.1.0.0/24 se sítí 10.2.0.0/24. Který prvek je nutný?","Router",["Hub","Switch","Repeater"],"Hub, switch a repeater pracují v rámci jedné LAN."],
+["prv","Chceš propojit dvě různé sítě, každou s vlastním rozsahem adres. Který prvek je nutný?","Router",["Hub","Switch","Repeater"],"Hub, switch a repeater pracují v rámci jedné LAN."],
+["prv","Co je nejčastějším zdrojem poruch v síti?","Kabely a konektory",["Routery","DNS servery","Operační systém"],"Proto se vyplatí kvalitní projekt (strukturovaná kabeláž)."],
+["prv","Co patří mezi ochranné pasivní prvky?","Rozvaděče (rack), záložní zdroje, ventilace, klimatizace",["Konektory RJ45, BNC a průchodky proti zlomu kabelu","Patch panely, zásuvky, lišty a spojky na kabely","Huby, repeatery a media konvertory v rozvaděči"],"Pomocné: spojky, rozdvojky, zásuvky, lišty, patch panely."],
+["prv","Proč se vyplatí investovat do kvalitního projektu kabeláže?","Pozdější změny a opravy rozvodů jsou drahé a narušují provoz",["Aktivní prvky se v dobré kabeláži už nikdy nemusí měnit","Norma zakazuje jakékoli dodatečné úpravy hotových rozvodů","Kvalitní kabeláž nahradí firewall a chrání tak celou síť"],"Pasivní prvky určují kvalitu a životnost celé sítě."],
+["prv","Jak se routuje v mobilních ad-hoc sítích?","Každý počítač si routuje sám",["Routuje jen jeden centrální router","Routuje se jen přes pevný switch","Routuje za všechny DHCP server"],null],
 
-// ---------- SWITCH/ROUTER SLUŽBY, NAT, PAT, FIREWALL (30) ----------
+// ---------- SWITCH/ROUTER SLUŽBY, NAT, PAT, FIREWALL (24) ----------
 ["nat","Co dělá Backward Learning Algorithm?","Switch si pamatuje, na kterém portu je která MAC; neznámý cíl → chová se jako hub",["Router se z DNS dotazů učí, kterou cestou posílat pakety","Firewall se z historie provozu učí rozpoznat nové útoky","DHCP server si pamatuje, kterému zařízení dal jakou IP"],null],
 ["nat","Co řeší Spanning Tree Protocol (STP)?","Smyčky v síti – brání broadcast storm",["Překlad privátních adres na veřejné","Přidělování IP adres","Šifrování provozu"],"Switche se domluví a některé spoje nepoužívají. Nevýhoda: pomalé."],
 ["nat","Firma potřebuje hlubokou kontrolu obsahu a aplikací a cena nevadí. Který firewall vybere?","Firewall nové generace (NGFW)",["Firewall pro filtrování paketů","Obvodový firewall (circuit-level)","Stavový inspekční firewall"],"NGFW = firewall + IDS/IPS + kontrola aplikací; je drahý a složitý na správu."],
-["nat","Co dělá routing?","Určuje cestu paketů podle routovacích tabulek",["Posílá data všem portům","Pamatuje si MAC na portech","Překládá jména na IP"],null],
 ["nat","Co je shaping (QoS)?","Omezení rychlosti klientů",["Šifrovaný kanál","Překlad portů","Řešení smyček"],null],
 ["nat","Co je VPN?","Šifrovaný kanál přes nezabezpečené médium",["Virtuální LAN vytvořená na switchi","Překlad privátních adres na veřejnou","Omezení rychlosti připojených klientů"],null],
 ["nat","Co NENÍ služba routeru podle přednášky?","Backward Learning Algorithm",["NAT a PAT","VPN","DHCP a DNS"],"Backward Learning je služba switche (2. vrstva)."],
 ["nat","Co je NAT?","Více zařízení s privátní adresou používá jednu veřejnou IP",["Přidělování IP adres podle MAC","Překlad jmen na IP","Řešení smyček ve switchích"],null],
 ["nat","Jak router při NAT pozná, komu uvnitř patří odpověď?","Překlad si uložil do tabulky pod náhodným portem a podle něj ho najde",["Podle MAC adresy serveru, ze kterého odpověď přišla","Nepozná to, a proto odpověď pošle všem vnitřním počítačům","Podle DNS jména, které si uložil při odchozím dotazu"],null],
 ["nat","Kdo musí při NAT zahájit komunikaci?","Vnitřní síť – zvenku se na počítač uvnitř spojit nejde",["Vnější server","Kdokoli, NAT to neomezuje","DNS server"],null],
-["nat","Co dělá Destination NAT a kde se hlavně používá?","Mění cílovou IP/port, hlavně u veřejných WiFi hotspotů",["Mění zdrojovou IP v domácnostech","Mění MAC adresy na switchi","Šifruje provoz ve VPN"],"Source NAT mění zdrojovou IP."],
 ["nat","Co je maškaráda (1:N)?","Dynamický NAT – nejčastější, domácnosti a firmy",["Konkrétní vnitřní adresa má vyhrazenou veřejnou","NAT u poskytovatele","Statický překlad portů"],"NAT 1:1 = vnitřní adresa má vyhrazenou veřejnou."],
 ["nat","Web server na 192.168.0.50 za NAT routerem není zvenku dostupný. Co nastavíš?","PAT: předání portu na 192.168.0.50 se statickou IP",["DHCP: serveru se při startu přidělí nová adresa","STP: na switchi se zruší smyčky v síti LAN","DNS: jméno serveru se přeloží na adresu APIPA"],"Při NAT musí komunikaci zahájit vnitřní síť; PAT zpřístupní službu zvenku."],
 ["nat","Co je NEVÝHODOU NAT?","Těžko se blokují konkrétní vnitřní zařízení zvenku",["Šetří IPv4 adresy","Skrývá strukturu vnitřní sítě","Umožní více zařízením jednu IP"],"Další: zařízení nemají reálné spojení ven, problémy s SW, energetická náročnost."],
 ["nat","Na kterých vrstvách pracují NAT a PAT?","NAT na 3., PAT na 3. a 4.",["NAT na 2., PAT na 3.","Oba jen na 7.","NAT na 4., PAT na 2."],"PAT je podmnožina NAT."],
 ["nat","Jak se podle přednášky liší NAT a PAT v práci s portem?","U NAT router port generuje náhodně, u PAT ho musí předem nastavit správce",["U NAT port nastavuje správce, u PAT je náhodný","Ani jeden porty nepoužívá","Oba porty jen náhodně generují"],null],
-["nat","V PAT tabulce je 8080 → 192.168.0.101:8080. Kam router přepošle paket na 68.202.151.70:8080?","Na vnitřní server 192.168.0.101 (musí mít statickou IP)",["Zahodí ho","Na všechny vnitřní počítače","Zpět odesílateli"],"Nevýhoda PAT: nižší bezpečnost zpřístupněných zařízení, detailnější nastavení firewallu."],
 ["nat","Co je firewall?","Kontrolní bod s pravidly, který řídí provoz mezi sítěmi s různou důvěryhodností",["Switch s podporou VLAN, který odděluje porty v jedné síti","Server pro DNS, který blokuje překlad podezřelých domén","Pasivní prvek v rozvaděči, který chrání kabely před rušením"],"Historicky pravidla: zdrojová/cílová IP a port."],
 ["nat","Jak funguje firewall typu filtrování paketů?","Kontroluje pakety podle IP, portů a protokolů – neanalyzuje obsah",["Sleduje stav aktivních spojení","Analyzuje obsah na aplikační úrovni","Učí se pomocí AI"],"+ jednoduchý a rychlý."],
 ["nat","Jak funguje proxy firewall (aplikační brána)?","Je prostředník a analyzuje obsah na aplikační úrovni – zpomaluje provoz",["Kontroluje jen IP adresy a porty, obsah paketů neřeší","Učí se detekovat anomálie pomocí AI a reaguje na zero-day","Hlídá jen TCP handshake a relace, obsah neanalyzuje"],"Stavový inspekční sleduje stav spojení, obvodový hlídá TCP handshake."],
@@ -175,27 +175,19 @@ Biflovna.subject({
 ["nat","Co kontroluje obvodový firewall (circuit-level gateway)?","Legitimitu TCP handshaků a relací, obsah paketů neanalyzuje",["Obsah paketů na aplikační úrovni jako prostředník spojení","Jen IP adresy a porty každého jednotlivého paketu zvlášť","Anomálie v provozu pomocí modelu naučeného na datech"],null],
 ["nat","Co je nevýhodou cloudového firewallu (FWaaS)?","Závislost na konektivitě, latence a průběžné poplatky",["Vysoká jednorázová cena za vlastní hardware v rozvaděči","Složitá instalace a nízká dostupnost služby pro uživatele","Nemožnost kontrolovat provoz směřující z Internetu dovnitř"],"Výhody: nižší náklady, snadná implementace, vysoká dostupnost."],
 ["nat","Jak se označuje nastavení pravidel pro komunikaci přes firewall?","Bezpečnostní politika",["Routovací tabulka","Překladová tabulka","Přístupový kanál"],"Patří do ní i NAT, VPN, IDS, autentizace a správa šířky pásma."],
-["nat","Co je výhodou NAT?","Více uzlů sdílí jednu veřejnou IP a vnitřní síť je skrytá, i když to není zásadní zabezpečení",["Vnitřní zařízení mají reálné spojení ven a jdou snadno blokovat zvenku jednotlivě","Zvenku se lze přímo spojit s každým vnitřním počítačem a software s tím nemá problém","Nahrazuje firewall, takže vnitřní síť už žádnou další ochranu nepotřebuje"],null],
 ["nat","Která verze NAT dává konkrétní vnitřní adrese vyhrazenou veřejnou adresu?","NAT 1:1",["Maškaráda (1:N NAT)","Destination NAT","Carrier-grade NAT"],"Často ji používají menší poskytovatelé."],
-["nat","Co je typické pro Carrier-grade NAT (CGN, NAT444)?","K překladu dochází i uvnitř sítě poskytovatele, rozsah 100.64.0.0/10",["K překladu dochází jen na domácím routeru, rozsah 192.168.0.0/16","Překládají se MAC adresy na switchích, rozsah 169.254.0.0/16","Mění se jen cílový port u hotspotů, rozsah 172.16.0.0/12"],"Na slidu je překlep 100.64.0.10/10."],
-["nat","Jak PAT umožní všem zařízením v LAN komunikovat přes jednu veřejnou IP?","Každé spojení odliší unikátním číslem portu",["Každému zařízení přidělí vlastní veřejnou IP","Spojení odliší podle MAC adresy odesílatele","Zařízení se střídají v pevných časových oknech"],null],
 ["nat","Co je VLAN?","Virtuální síť vytvořená na switchi nad fyzickou sítí",["Šifrovaný kanál přes nezabezpečené přenosové médium","Bezdrátová síť několika prvků s jedním názvem a heslem","Překlad vnitřních adres sítě na jednu veřejnou adresu"],"Umí ji managovatelné switche."],
 
 // ---------- KABELÁŽ (27) ----------
-["kab","Co je nejčastějším zdrojem poruch v síti?","Kabely a konektory",["Routery","DNS servery","Operační systém"],"Proto se vyplatí kvalitní projekt (strukturovaná kabeláž)."],
 ["kab","S čím roste útlum kabelu?","S frekvencí, menším průměrem kabelu a délkou",["S větším průměrem kabelu","Jen s teplotou","S počtem připojených PC"],"Útlum určuje použitelnou délku kabelu."],
 ["kab","Jak se nazývá přeslech mezi souběžnými vodiči?","Crosstalk",["Jitter","Broadcast storm","Handshake"],null],
-["kab","Co patří mezi ochranné pasivní prvky?","Rozvaděče (rack), záložní zdroje, ventilace, klimatizace",["Konektory RJ45, BNC a průchodky proti zlomu kabelu","Patch panely, zásuvky, lišty a spojky na kabely","Huby, repeatery a media konvertory v rozvaděči"],"Pomocné: spojky, rozdvojky, zásuvky, lišty, patch panely."],
 ["kab","Jak je stavěný koaxiální kabel?","Střední vodič, plastová izolace, opletení (stínění), vnější pouzdro",["4 zkroucené páry vodičů","Skleněné jádro a plášť","Dva souběžné vodiče ve společném pouzdře"],null],
 ["kab","Tenký koax: standard, max. segment a konektor?","10BASE-2, 185 m, BNC",["10BASE-5, 500 m, AUI","10BASE-2, 500 m, RJ45","10BASE-T, 100 m, BNC"],"Tlustý: 10BASE-5, 500 m, AUI. Oba 10 Mb/s, 50 Ω, sběrnice."],
-["kab","Tlustý koax („Yellow Ethernet“): standard a max. segment?","10BASE-5, 500 m",["10BASE-2, 185 m","10BASE-T, 100 m","10BASE-F, 2 km"],"Celá síť max 2 500 m (tenký 910 m)."],
 ["kab","Co patří na konce tenkého koaxu?","Terminátory",["Patch panely","Repeatery","RJ45 konektory"],"Potřeba: BNC, T-konektory, I-konektory (spojky), terminátory."],
-["kab","Proč jsou T-konektory u tenkého koaxu problém?","Na každé odbočce se kabel přeruší, což způsobuje těžko zjistitelné poruchy",["Jsou příliš drahé, a proto se v sítích nepoužívají","Neumí přenést 10 Mb/s, takže síť zpomalují","Nefungují s BNC konektory a vyžadují AUI"],null],
 ["kab","Kolik párů má kroucená dvoulinka a proč jsou zkroucené?","4 páry; zkroucení potlačuje rušení a zvyšuje dosah",["2 páry; kvůli ohebnosti","8 párů; kvůli rychlosti","4 páry; kvůli nižší ceně"],"Každý pár má jinou délku zkrutu."],
 ["kab","Co znamená, že kroucená dvoulinka je symetrické vedení?","Obě žíly jsou rovnocenné a signál je rozdíl potenciálů mezi nimi",["Jedna žíla je zem, druhá signál","Kabel je stejně dlouhý na obou koncích","Oba konce mají stejný konektor"],null],
 ["kab","K čemu se používá lanko a k čemu drát?","Lanko na ohebné kabely k PC, drát na pevné rozvody v lištách",["Lanko do lišt, drát k PC","Oba jen na optiku","Lanko pro koax, drát pro UTP"],null],
 ["kab","Co znamená U/FTP?","Kabel nestíněný, páry stíněné fólií",["Kabel fólií, páry nestíněné","Kabel opletením, páry fólií","Nic není stíněné"],"Před lomítkem celý kabel, za lomítkem páry. U = nestíněný, F = fólie, S = opletení."],
-["kab","Co znamená F/UTP?","Kabel stíněný fólií, páry nestíněné",["Kabel nestíněný, páry fólií","Kabel i páry fólií","Kabel opletením"],"Staré FTP = nové F/UTP; staré STP = nové U/FTP."],
 ["kab","Co znamená S/FTP?","Kabel stíněný opletením, páry fólií",["Kabel fólií, páry opletením","Nic nestíněné","Kabel fólií + opletením, páry nestíněné"],null],
 ["kab","Jakou rychlost a frekvenci má Cat.5e?","1 Gb/s, 100 MHz",["100 Mb/s, 100 MHz","10 Gb/s, 500 MHz","1 Gb/s, 250 MHz"],"Cat.5 = 100 Mb/s."],
 ["kab","Potřebuješ 10 Gb/s na 50 m s běžným RJ45 a doporučovanou kategorií. Co zvolíš?","Cat.6A",["Cat.5E","Cat.7","Cat.8"],"Cat.5E má 1 Gb/s, Cat.7 se nedoporučuje a má nestandardní konektory, Cat.8 má dosah jen 30 m."],
@@ -208,9 +200,14 @@ Biflovna.subject({
 ["kab","Jaké parametry má Cat.6A podle souhrnné tabulky?","10 Gb/s, 625 MHz, 100 m, RJ45",["1 Gb/s, 250 MHz, 100 m, RJ45","10 Gb/s, 600 MHz, 100 m, Terra","25 Gb/s, 2000 MHz, 30 m, RJ45"],"Slidy se liší: jinde se uvádí 500 MHz a 10 Gb/s jen do 55 m."],
 ["kab","Co je Alien Crosstalk?","Přeslech mezi sousedními kabely ve svazku a blízkými porty",["Přeslech mezi dvěma vodiči uvnitř jednoho krouceného páru","Rušení signálu rádiovými vysílači z okolí budovy a kabelu","Útlum signálu způsobený příliš malým průměrem vodičů"],"Projevuje se až při 10 Gb/s, proto vznikla Cat.6A."],
 ["kab","Co se podle normy ISO/IEC 11801 z roku 2006 stalo hlavním kritériem výkonnosti kabeláže?","Přenosová rychlost místo šířky pásma",["Šířka pásma místo přenosové rychlosti","Největší možná délka jednoho segmentu","Typ stínění kabelu místo typu konektoru"],null],
-["kab","Proč se vyplatí investovat do kvalitního projektu kabeláže?","Pozdější změny a opravy rozvodů jsou drahé a narušují provoz",["Aktivní prvky se v dobré kabeláži už nikdy nemusí měnit","Norma zakazuje jakékoli dodatečné úpravy hotových rozvodů","Kvalitní kabeláž nahradí firewall a chrání tak celou síť"],"Pasivní prvky určují kvalitu a životnost celé sítě."],
+["kab","Jakou rychlost zvládne Cat.5 (bez E)?","100 Mb/s",["10 Mb/s","1 Gb/s","10 Gb/s"],"Cat.5E už zvládne 1 Gb/s."],
+["kab","Které dvě kategorie přednáška NEDOPORUČUJE?","Cat.6 a Cat.7",["Cat.5E a Cat.6A","Cat.6A a Cat.8","Cat.5E a Cat.8"],"Doporučené jsou Cat.5E, Cat.6A a případně Cat.8."],
+["kab","Jakou rychlost a frekvenci má Cat.7?","10 Gb/s, 600 MHz",["1 Gb/s, 250 MHz","25 Gb/s, 2000 MHz","15 Gb/s, 1000 MHz"],"15 Gb/s a 1000 MHz má až Cat.7a."],
+["kab","Která kategorie má 15 Gb/s a 1000 MHz?","Cat.7a",["Cat.6A","Cat.7","Cat.8"],null],
+["kab","Jaké konektory se používají pro Cat.7?","GG45 a TERA",["RJ45 a RJ11","BNC a AUI","SFP a RJ10"],"Nestandardní konektory jsou jeden z důvodů, proč se Cat.7 nedoporučuje."],
+["kab","Jaká je maximální délka segmentu u kategorií Cat.5E až Cat.7a?","100 m",["30 m","185 m","500 m"],"Výjimkou jsou Cat.8 a Cat.8a s pouhými 30 m."],
 
-// ---------- OPTIKA (14) ----------
+// ---------- OPTIKA (18) ----------
 ["opt","Co je optické vlákno a díky čemu v něm světlo drží?","Nevodivý vlnovod; úplný odraz na rozhraní dvou prostředí",["Měděný vodič; magnetické pole","Kroucený pár; stínění","Rádiová anténa; odraz od ionosféry"],"Snellův zákon lomu: při malém úhlu dopadu se paprsek odrazí celý."],
 ["opt","Jednovidové vlákno (SMF): průměr a zdroj světla?","9/125 μm (8,5/125), laser",["50/125 μm, LED","62,5/125 μm, LED","9/125 μm, LED"],"Jediný mód, minimální disperze, dlouhé dosahy, WDM."],
 ["opt","Mnohovidové vlákno (MMF): průměr a zdroj světla?","50/125 nebo 62,5/125 μm, LED nebo VCSEL 850 nm",["9/125 μm, výhradně laser pro dlouhé trasy","8,5/125 μm, laser a vlnový multiplex DWDM","125/250 μm, halogenová žárovka nebo výbojka"],"Levnější, kratší dosah – datacentra, kampus. 62,5/125 hlavně v USA."],
@@ -225,15 +222,18 @@ Biflovna.subject({
 ["opt","Co jsou „okna“ u optických vláken?","Rozsahy vlnových délek vhodné pro přenos dat",["Místa, kde se dvě vlákna navzájem spojují","Rozsahy délek kabelu mezi dvěma zesilovači","Časové úseky, kdy vysílá jen jedna stanice"],"O, E, S, C, L a U."],
 ["opt","Co kromě materiálové absorpce ovlivňuje útlum optického vlákna?","Materiálový rozptyl a ohyb vlákna",["Počet klientů a velikost paketů","Elektromagnetické rušení a přeslechy","Typ konektoru a stínění opletením"],null],
 ["opt","Proč má jednovidové vlákno delší dosah než mnohovidové?","Šíří se jediný mód, takže je modální disperze minimální",["Používá levné LED diody, které mají menší útlum signálu","Šíří se v něm mnoho módů, které se navzájem zesilují","Má větší jádro, které do sebe pojme více světla ze zdroje"],null],
+["opt","Jaký útlum mají plastová optická vlákna?","50–100 dB/km",["Kolem 0,2 dB/km","1–2 dB/km","Přes 1 000 dB/km"],"Křemíková vlákna mají asi 0,2 dB/km."],
+["opt","Čím se na velmi dlouhých optických trasách obnovuje signál?","Zesilovači EDFA",["Terminátory","Sloty SFP","Diodami VCSEL"],"Při 2,5 Gb/s tak jde překlenout asi 900 km."],
+["opt","Kde se typicky používá mnohovidové vlákno?","Na krátké linky v datacentru a kampusu",["Na páteřní trasy mezi městy","Na podmořské kabely přes oceán","Na spoje s multiplexem DWDM"],null],
+["opt","Které přenosové okno pokrývá přibližně 1530–1562 nm?","C",["O","E","U"],null],
 
-// ---------- BEZDRÁT (21) ----------
+// ---------- BEZDRÁT (20) ----------
 ["wif","Jaké jsou vlastnosti bezdrátových přenosů?","Postaví se rychle a na velké vzdálenosti, ale jsou méně spolehlivé a méně bezpečné",["Jsou spolehlivější i bezpečnější než kabelové rozvody","Dají se postavit jen na krátké vzdálenosti uvnitř budov","Vždy vyžadují licenci od ČTU a nízké investice"],null],
 ["wif","Jaký frekvenční rozsah má rádiová a jaký mikrovlnná komunikace?","Rádiová 30 Hz – 1 GHz, mikrovlnná 1 – ~100 GHz",["Rádiová 1–100 GHz, mikrovlnná 30 Hz – 1 GHz","Obě 2,4 GHz","Rádiová nad 100 GHz, mikrovlnná pod 1 MHz"],null],
 ["wif","Jak se šíří mikrovlny?","Přímočaře, směrové antény, potřeba přímé viditelnosti (retranslační stanice)",["Všesměrově a dobře procházejí překážkami","Jen po kabelu","Odrazem od ionosféry"],"Použití: WiFi, 5G, GSM, satelity. Rádio: AM/FM, vysílačky, IoT."],
 ["wif","Co platí o nelicencovaném pásmu (WiFi)?","Nevyžaduje povolení ČTU, je zdarma, ale kanál ti nikdo nezaručí",["Přiděluje ho ČTU a garantuje ochranu","Je placené a chráněné","Provoz v něm schvaluje ČTU pro každý spoj"],"Rušení omezí směrové antény (pozor na Fresnelovu zónu)."],
 ["wif","Proč má 2,4 GHz problém se stromy a dřevem?","Vlnu (~12,5 cm) z 95 % pohltí voda a organické látky",["Protože je moc krátká (~1 mm)","Protože ji odráží kov","Protože vyžaduje licenci"],"5 GHz: vlna ~6 cm, voda ji pohlcuje méně."],
 ["wif","Co platí o pásmu 6 GHz?","Nové pásmo (5,925–7,125 GHz), kanály se nepřekrývají – nezaměňovat s WiFi 6",["Je to totéž co obchodní označení WiFi 6 (802.11ax)","Používá se jen pro rozhlasové vysílání AM/FM","Je licencované a přiděluje ho ČTU konkrétním firmám"],null],
-["wif","Co platí o pásmu 10 GHz?","Jen spoje bod–bod, až 34 Mb/s, dosah až 40 km",["Všesměrová WiFi pro domácnosti","Jen sítě s centrálním uzlem a klienty","Bod–bod, až 622 Mb/s, dosah 5 km"],null],
 ["wif","Jaký standard je WiFi 6 a WiFi 7?","WiFi 6 = 802.11ax, WiFi 7 = 802.11be",["WiFi 6 = 802.11ac, WiFi 7 = 802.11ax","WiFi 6 = 802.11be, WiFi 7 = 802.11ax","WiFi 6 = 802.11n, WiFi 7 = 802.11ac"],"WiFi 5 = 802.11ac, WiFi 6E = 802.11ax + 6 GHz."],
 ["wif","Co přinesla WiFi 7?","Kanál 320 MHz, 4096 QAM, MLO, Multi-RU, puncturing",["Povinných 40 MHz a 256 QAM","Kanál 160 MHz, 1024 QAM, TWT, BSS coloring","Kanál 80 MHz, 256 QAM, MU-MIMO 4×4"],"Až 46 120 Mb/s, rok 2024, ~13× rychlejší než WiFi 5."],
 ["wif","Jaké zabezpečení a modulaci má WiFi 6?","WPA3, 1024 QAM",["WPA2, 256 QAM","WPA4, 4096 QAM","WEP, 64 QAM"],"Novinky WiFi 6: TWT, BSS coloring, beamforming."],
@@ -330,7 +330,7 @@ Biflovna.subject({
       <li><b>DHCP, subnetting/CIDR a NAT/PAT</b> nedostatek jen zmírňují. Skutečné řešení je <b>IPv6</b>.</li>
       <li><b>APIPA 169.254.x.x</b> (rozsah třídy B) si zařízení přidělí samo, když <b>nedostane adresu z DHCP</b>. Fungují jen lokální služby, ven se nedostane. DHCP dál hledá <b>každé 3 minuty</b>.</li></ul></div>
 
-    <div class="lc" id="L-msk"><h2>5 · Maska, brána, subnetting, DHCP</h2>
+    <div class="lc" id="L-msk"><h2>5 · Maska, brána, DHCP</h2>
       <ul><li>Každé zařízení potřebuje: <b>IP adresu, masku, bránu, adresu DHCP a adresu DNS</b>.</li></ul>
       <h3>Maska a brána</h3><ul>
       <li><b>Maska</b> má 32 bitů a určuje rozsah vnitřní sítě: <b>jedničky = síť, nuly = počítač</b>.</li>
@@ -338,14 +338,8 @@ Biflovna.subject({
       <li>Příklad: 10.10.10.x a 10.10.<b>11</b>.x s maskou /24 jsou <b>různé sítě</b>, komunikace musí jít přes <b>router</b>.</li>
       <li><b>Brána</b> = adresa routeru, přes který jdou všechny požadavky mimo domácí síť. Bývá stejná pro celou síť a zvykem je <b>.1</b> na konci.</li></ul>
       <h3>Subnetting</h3><ul>
-      <li>Každý „půjčený“ bit dá <b>2× víc podsítí o poloviční velikosti</b>.</li>
-      <li class="hl">Velikost podsítě = <b>256 − poslední oktet masky</b>. Použitelné adresy = <b>velikost − 2</b> (první je adresa sítě, poslední broadcast).</li></ul>
-      <table class="lt"><tr><th>Prefix</th><th>Maska</th><th>Adres</th><th>Použit.</th><th>Podsítí z /24</th></tr>
-      <tr><td>/24</td><td>.0</td><td>256</td><td>254</td><td>1</td></tr><tr><td>/25</td><td>.128</td><td>128</td><td>126</td><td>2</td></tr>
-      <tr><td>/26</td><td>.192</td><td>64</td><td>62</td><td>4</td></tr><tr><td>/27</td><td>.224</td><td>32</td><td>30</td><td>8</td></tr>
-      <tr><td>/28</td><td>.240</td><td>16</td><td>14</td><td>16</td></tr><tr><td>/29</td><td>.248</td><td>8</td><td>6</td><td>32</td></tr>
-      <tr><td>/30</td><td>.252</td><td>4</td><td>2</td><td>64</td></tr></table>
-      <ul><li>Příklad: 192.168.1.0/24 na 4 podsítě = <b>/26</b>, rozsahy .0–63, .64–127, .128–191, .192–255.</li></ul>
+      <li><b>Subnetting</b> rozděluje jednu síť na několik menších <b>podsítí</b>. Každý „půjčený“ bit dá <b>2× víc podsítí o poloviční velikosti</b>.</li>
+      <li>V každé podsíti nejdou použít dvě adresy: první je <b>adresa sítě</b> a poslední <b>broadcast</b>.</li></ul>
       <h3>DHCP</h3><ul>
       <li>DHCP server pozná zařízení podle <b>MAC adresy</b> a přidělí mu IP z nastaveného rozsahu.</li>
       <li><b>Dynamicky</b> dostávají adresy pracovní stanice, <b>staticky</b> servery, routery a switche. Ruční nastavení má být výjimka.</li></ul></div>

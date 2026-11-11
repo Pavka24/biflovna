@@ -3,7 +3,7 @@
   "appName": "Biflovna",
   "webDir": "dist/www",
   "android": {
-    "backgroundColor": "#FAF9F6",
+    "backgroundColor": "#F3F1EA",
     "allowMixedContent": false,
     "webContentsDebuggingEnabled": false
   }

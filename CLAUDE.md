@@ -75,9 +75,10 @@ Uživatel pošle cesty k `.pptx/.ppsx/.pdf` (+ případně výpisky). Postup:
 
 ### Jak dělat otázky (doplňuje postup importu výše)
 - Vycházet z přednášek; **rozpory ve slidech nahlas říct** (známé: Cat.6 400 vs 250 MHz, mikrovlny od 100 MHz vs 1 GHz, 6 GHz dva rozsahy, CGN překlep `100.64.0.10/10`, podsíť B překlep `.63`).
-- Co uživatel chce: otázky, které by **reálně mohly být v testu**. Definice a parametry z tabulek ano, k tomu výpočty podsítí, diagnostika poruch, volba řešení podle situace (kabel, vlákno, firewall, protokol) a „proč“.
-- Co nechce: barvy vodičů, roky a kuriozity, konkrétní IP adresy služeb, „jak držet konektor“.
+- Co uživatel chce: otázky, které by **reálně mohly být v testu**. Definice a parametry z tabulek ano (hlavně kategorie kabelů Cat.5 až Cat.8), k tomu diagnostika poruch, volba řešení podle situace (kabel, vlákno, firewall, protokol) a „proč“.
+- Co nechce: **výpočty podsítí a otázky s konkrétními IP adresami/prefixy** (subnetting jen jako pojem, od 1.3.0), barvy vodičů, roky a kuriozity, konkrétní IP adresy služeb, „jak držet konektor“.
 - Špatné odpovědi věrohodné a ze stejné oblasti, žádné zjevné nesmysly („Jen v tiskárnách“, „Dosah 1 m“), správná se nesmí poznat podle délky.
+- Počty v tématech drž vyrovnané (zhruba 14 až 27). Test si témata střídá dokola (`pick` v `src/app.js`), takže jsou zastoupená rovnoměrně.
 - Max 200 na předmět. Změna textu otázky maže její statistiku; když stačí lepší špatné odpovědi, měň jen je. Otázky jsou řádky JSON polí, hromadné úpravy skriptem podle textu otázky.
 
 ### Testování na tomto PC (poučení)
@@ -97,7 +98,11 @@ Uživatel pošle cesty k `.pptx/.ppsx/.pdf` (+ případně výpisky). Postup:
 - MT5/jiné projekty v nadřazené složce nesouvisí.
 
 ## Design (neměnit bez důvodu)
-Styl „Minimalism & Swiss“, teplý papírový podklad, inkoustově modrý akcent `#1D4ED8` (**ne fialová** – AI-slop),
-nadpisy Playfair Display, text Inter (vložené, offline), SVG ikony (žádné emoji jako ikony), světlý i tmavý režim.
-Pohyb podle Emil Kowalski: `scale(.97)` na stisk, ease-out `cubic-bezier(.23,1,.32,1)`, žádné animace u akcí z klávesnice,
-hover jen pro `(hover:hover) and (pointer:fine)`, respektovat `prefers-reduced-motion`.
+Od 1.3.0 „Liquid Glass“ (schváleno uživatelem na ukázce): průsvitné skleněné vrstvy (`backdrop-filter`) nad pomalu plynoucím barevným pozadím (`.scene`),
+plovoucí spodní lišta předmětu (`#dock`: Předměty / Test / Learning), inkoustově modrý akcent `#1D4ED8` (**ne fialová**), světlý i tmavý režim.
+- **Tmavý režim musí být opravdu tmavý** (podklad `#020306`, tlumené skvrny). **Žádné rušivé prvky**: nic nesmí reagovat na pohyb myši (odlesky, paralaxa), žádné pulzování.
+- **Písmo jen Inter** (nadpisy i text). Playfair Display uživatel odmítl jako špatně čitelný; build ho z `assets/fonts.css` vyřazuje.
+- Tokeny a sklo jsou v `src/styles.css` (začátek souboru + sekce „LIQUID GLASS“ na konci). `--card` a `--bg-soft` jsou průsvitné, na neprůhledné plochy použij `--solid`.
+- Rozostření pozadí jen na pár velkých ploch a plovoucích prvcích; dlouhé seznamy (`.lc`, `.ri`) ho kvůli výkonu na telefonu nemají.
+- Pohyb: `scale(.97)` na stisk, ease-out `cubic-bezier(.23,1,.32,1)`, pružina `--spring` jen u přepínače a odpovědí, žádné animace u akcí z klávesnice,
+  hover jen pro `(hover:hover) and (pointer:fine)`, respektovat `prefers-reduced-motion` a `prefers-reduced-transparency`. SVG ikony, žádné emoji.

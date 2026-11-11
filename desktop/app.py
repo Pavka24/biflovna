@@ -106,7 +106,7 @@ if __name__ == "__main__":
         width=1120,
         height=880,
         min_size=(380, 560),
-        background_color="#FAF9F6",
+        background_color="#F3F1EA",
         text_select=True,
     )
     # stažená aktualizace se po zavření okna nainstaluje sama (bez znovuspuštění)

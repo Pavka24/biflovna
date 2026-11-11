@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FAF9F6">
+<meta name="theme-color" content="#F3F1EA">
 <meta name="description" content="Biflovna – trénovací testy a stručné výpisky ke zkouškám. Funguje offline.">
 <title>Biflovna</title>
 <!--PWA-->
@@ -14,6 +14,7 @@
 </style>
 </head>
 <body>
+<div class="scene" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-logo" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="m9 12.5 2 2 4-4.5"/></symbol>
   <symbol id="i-net" viewBox="0 0 24 24"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></symbol>
@@ -65,15 +66,9 @@
 
 <!-- PŘEDMĚT -->
 <section id="subject" class="hide">
-  <a class="back" href="#/">%%BACK%%Všechny předměty</a>
   <p class="eyebrow" id="sEyebrow"></p>
   <h1 class="subject-title" id="sName"></h1>
   <p class="lead" id="sTeacher"></p>
-
-  <div class="seg" role="tablist">
-    <button class="on" data-t="test" role="tab" aria-selected="true"><svg class="i"><use href="#i-clip"/></svg>Test</button>
-    <button data-t="learn" role="tab" aria-selected="false"><svg class="i"><use href="#i-book"/></svg>Learning</button>
-  </div>
 
   <div class="card" id="testPane">
     <div class="stats">
@@ -89,11 +84,12 @@
       </label>
       <div class="row">
         <button class="btn ghost sm" id="bReset" title="Smaže statistiky tohoto předmětu"><svg class="i"><use href="#i-trash"/></svg>Vymazat statistiky</button>
+        <button class="btn outline hide" id="bResume"><svg class="i"><use href="#i-arrow"/></svg>Pokračovat v testu <span class="count" id="nResume"></span></button>
         <button class="btn outline" id="bWrong"><svg class="i"><use href="#i-redo"/></svg>Procvičit chyby <span class="count" id="nWrong">0</span></button>
         <button class="btn primary" id="bStart"><svg class="i"><use href="#i-play"/></svg>Spustit test</button>
       </div>
     </div>
-    <p class="note kbd-note">Přednost mají otázky, které jsi ještě neviděl nebo jsi je naposled pokazil. Klávesy <span class="kbd">A</span>–<span class="kbd">D</span> nebo <span class="kbd">1</span>–<span class="kbd">4</span> odpověď, <span class="kbd">Enter</span> další otázka.</p>
+    <p class="note kbd-note">Témata jsou v testu zastoupená rovnoměrně, přednost mají otázky, které jsi ještě neviděl nebo jsi je naposled pokazil. Klávesy <span class="kbd">A</span>–<span class="kbd">D</span> nebo <span class="kbd">1</span>–<span class="kbd">4</span> odpověď, <span class="kbd">Enter</span> další otázka, <span class="kbd">←</span> zpět.</p>
   </div>
 
   <div id="learnPane" class="hide">
@@ -118,13 +114,18 @@
   <div class="prog"><div id="qProg"></div></div>
   <div class="dots" id="dots"></div>
   <div class="card">
-    <p class="qnum" id="qNum"></p>
-    <h2 class="q" id="qText"></h2>
-    <div class="opts" id="opts"></div>
-    <div class="fb" id="fb" aria-live="polite"></div>
+    <div id="qBody">
+      <p class="qnum" id="qNum"></p>
+      <h2 class="q" id="qText"></h2>
+      <div class="opts" id="opts"></div>
+      <div class="fb" id="fb" aria-live="polite"></div>
+    </div>
     <div class="foot">
       <span class="hint kbd-note" id="kHint"></span>
-      <button class="btn primary" id="bNext" disabled>Další<svg class="i"><use href="#i-arrow"/></svg></button>
+      <div class="nav">
+        <button class="btn outline" id="bPrev" disabled><svg class="i"><use href="#i-back"/></svg>Zpět</button>
+        <button class="btn primary" id="bNext" disabled>Další<svg class="i"><use href="#i-arrow"/></svg></button>
+      </div>
     </div>
   </div>
 </section>
@@ -159,6 +160,13 @@
   </div>
   <div class="rev" id="rev"></div>
 </section>
+
+<nav class="dock hide" id="dock" aria-label="Předmět">
+  <span class="thumb"></span>
+  <a href="#/"><svg class="i"><use href="#i-home"/></svg>Předměty</a>
+  <button data-t="test" aria-pressed="true"><svg class="i"><use href="#i-clip"/></svg>Test</button>
+  <button data-t="learn" aria-pressed="false"><svg class="i"><use href="#i-book"/></svg>Learning</button>
+</nav>
 </div>
 
 <script>

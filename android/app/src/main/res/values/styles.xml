@@ -17,7 +17,7 @@
 
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">#FAF9F6</item>
+        <item name="windowSplashScreenBackground">#F3F1EA</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
         <item name="windowSplashScreenIconBackgroundColor">#151B2A</item>
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>

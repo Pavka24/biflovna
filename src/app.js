@@ -103,6 +103,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.3.4", added: ["Novou verzi appka ohlásí sama i za běhu, není potřeba ji kvůli tomu restartovat"], fixed: [] },
   { v: "1.3.3", added: ["Chytřejší výběr otázek: do nových testů se častěji vrací ty, které opakovaně kazíš"], fixed: ["PC: šedý posuvník okna nahradil tenký průsvitný, který ladí se vzhledem aplikace"] },
   { v: "1.3.2", added: ["Verze pro Linux (Mint, Ubuntu): instalační balíček .deb"], fixed: [] },
   { v: "1.3.1", added: ["Vlastní počet otázek v testu (nebo rovnou všechny)", "Tlačítko Vybrat vše / Zrušit výběr u témat testu"], fixed: ["iPhone: pruh s hodinami nahoře už ladí s tmavým režimem", "Hezčí výběr počtu otázek místo rozbalovacího seznamu", "Potvrzovací okna (ukončení testu, smazání statistik) ladí se vzhledem aplikace"] },
@@ -415,31 +416,43 @@ function netInfo() {
   const when = NET.at ? `, zkontrolováno ${NET.at.toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" })}` : "";
   toast(`Verze ${APP_VERSION} · obsah z ${d.toLocaleDateString("cs-CZ")}${NET.s === "off" ? " · offline" : when}`);
 }
-let updChecked = false;
-async function checkUpdates() {
-  if (updChecked) return;
-  if (!UPDATE_URL || !navigator.onLine) { setNet("off", `Offline · ${APP_VERSION}`); return; }
-  updChecked = true; setNet("check", "Kontroluji…");
+// Kontrola běží při startu a pak potichu dál (každých 15 min a při návratu do okna), takže o nové verzi
+// se appka dozví i bez restartu. Stejnou verzi nabídne jen jednou („Později“ platí).
+const RECHECK_MS = 15 * 60 * 1000, REFOCUS_MS = 5 * 60 * 1000;
+let updChecked = false, updBusy = false, updOffered = null;
+async function checkUpdates(again) {
+  if (updBusy || (updChecked && !again)) return;
+  if (!UPDATE_URL || !navigator.onLine) { if (NET.s !== "update") setNet("off", `Offline · ${APP_VERSION}`); return; }
+  updBusy = true;
+  if (!updChecked) setNet("check", "Kontroluji…");     // další kontroly ukazatel nepřeblikávají
+  updChecked = true;
   try {
     const ctl = new AbortController(); setTimeout(() => ctl.abort(), 8000);
     const v = await (await fetch(UPDATE_URL + "version.json?t=" + Date.now(), { cache: "no-store", signal: ctl.signal })).json();
     NET.at = new Date();
     const cur = store.get("biflovna.content", null), have = cur && cur.date > CONTENT.date ? cur : CONTENT;
-    if (!IS_HOSTED() && v.contentHash !== have.hash && v.contentDate > have.date && !newer(v.minApp || "0.0.0", APP_VERSION)) {
+    const inTest = /\/test$/.test(location.hash);      // rozdělaný test nový obsah nepřepíše, načte se při další kontrole
+    if (!inTest && !IS_HOSTED() && v.contentHash !== have.hash && v.contentDate > have.date && !newer(v.minApp || "0.0.0", APP_VERSION)) {
       const list = await (await fetch(UPDATE_URL + "subjects.json?h=" + v.contentHash, { cache: "no-store" })).json();
       if (Array.isArray(list) && list.length) {
         store.set("biflovna.content", { hash: v.contentHash, date: v.contentDate, minApp: v.minApp || "0.0.0", subjects: list });
         if (useContent(JSON.parse(JSON.stringify(list)))) { route(); toast("Otázky a výpisky byly aktualizovány"); }
       }
     }
-    if (newer(v.version, APP_VERSION)) { NET.v = v; setNet("update", `Nová verze ${v.version}`); offerUpdate(v); }
-    else setNet("ok", `Aktuální · ${APP_VERSION}`);
+    if (newer(v.version, APP_VERSION)) {
+      NET.v = v; setNet("update", `Nová verze ${v.version}`);
+      if (updOffered !== v.version) { updOffered = v.version; offerUpdate(v); }
+    } else setNet("ok", `Aktuální · ${APP_VERSION}`);
   } catch (e) {
-    updChecked = false;                                // nepovedlo se → zkusí se znovu, až bude síť
-    setNet("off", `Offline · ${APP_VERSION}`);
-  }
+    if (!again) updChecked = false;                    // nepovedlo se → zkusí se znovu, až bude síť
+    if (NET.s !== "update") setNet("off", `Offline · ${APP_VERSION}`);
+  } finally { updBusy = false; }
 }
-window.addEventListener("online", () => checkUpdates());
+setInterval(() => { if (!document.hidden) checkUpdates(true); }, RECHECK_MS);
+const recheckOnReturn = () => { if (updChecked && !document.hidden && (!NET.at || Date.now() - NET.at > REFOCUS_MS)) checkUpdates(true); };
+document.addEventListener("visibilitychange", recheckOnReturn);
+window.addEventListener("focus", recheckOnReturn);
+window.addEventListener("online", () => checkUpdates(true));
 window.addEventListener("offline", () => { if (NET.s !== "update") setNet("off", `Offline · ${APP_VERSION}`); });
 document.addEventListener("click", e => { if (e.target.closest("#net")) netInfo(); });
 

@@ -72,7 +72,7 @@ fs.writeFileSync(path.join(OUT, "index.html"), html);
 fs.writeFileSync(path.join(OUT, "subjects.json"), contentJson);
 fs.writeFileSync(path.join(OUT, "version.json"), JSON.stringify({
   version: pkg.version, minApp: pkg.contentMinApp || "1.1.0", contentHash: hash, contentDate: date,
-  pc: relBase + "Biflovna-Setup.exe", android: relBase + "Biflovna.apk",
+  pc: relBase + "Biflovna-Setup.exe", android: relBase + "Biflovna.apk", linux: relBase + "Biflovna.deb",
 }, null, 2));
 
 // --- PWA: manifest + service worker (cache-first, plně offline) ---

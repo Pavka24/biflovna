@@ -242,6 +242,10 @@ async function savePdf(doc, name, title) {
       if (r && r.ok) toast("PDF je uložené"); else if (r && !r.cancel) toast("PDF se nepodařilo uložit");
       return;
     }
+    if (IS_LINUX()) {                                       // okno na Linuxu uloží soubor do složky Stažené a samo to oznámí
+      window.webkit.messageHandlers.biflovna.postMessage(JSON.stringify({ pdf: doc.output("datauristring").split(",")[1], name }));
+      return;
+    }
     if (IS_ANDROID()) {
       await window.Capacitor.Plugins.Updater.sharePdf({ data: doc.output("datauristring").split(",")[1], name });
       return;

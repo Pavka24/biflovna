@@ -10,6 +10,10 @@ Uživatel komunikuje česky – odpovídej česky.
 - `src/app.js`, `src/index.html`, `src/styles.css` – aplikace (router, test, výsledky, Learning). Na obsah předmětů nesahej odsud.
 - `src/pdf.js` – export výpisků do PDF (jsPDF, skládá z HTML v `learn`; nové bloky ve výpiscích je potřeba doplnit do smyčky na konci `makeLearnPdf`). `assets/pdf-fonts.js` generuje `scripts/make_pdf_font.py`, znovu ho spusť při nových znacích.
 - `assets/` – ikony (SVG) a vložené fonty. `desktop/app.py` – PC okno (pywebview). `installer/Biflovna.iss` – instalátor.
+- `linux/biflovna.py` – okno pro Linux (GTK 3 + WebKitGTK, bez pywebview). `scripts/build-linux.mjs` z něj a z `dist/www` skládá `Instalace/Linux/Biflovna.deb`
+  přímo v Node (ar + tar.gz, žádné dpkg), takže se staví i na Windows. Statistiky na Linuxu: `~/.local/share/biflovna`. Stránka pozná Linux podle `IS_LINUX()`
+  (`window.webkit.messageHandlers.biflovna`): PDF posílá oknu zprávou (uloží do Stažené), nová verze = lišta „Stáhnout“ → `.deb` v prohlížeči (ručně nainstalovat).
+  **Na tomto PC není Linux ani WSL, balíček se tu nedá spustit** – po změně `linux/biflovna.py` to řekni uživateli a nech ho vyzkoušet.
 - `android/` – Capacitor projekt. `signing/` – **podpisový klíč APK, nikdy nemazat** (bez něj nejdou aktualizace na telefonech).
 - `scripts/` – build, validace, extrakce slidů, smoke test.
 
@@ -42,7 +46,7 @@ Uživatel pošle cesty k `.pptx/.ppsx/.pdf` (+ případně výpisky). Postup:
 ## Aktualizace (jak se nová verze dostane k lidem)
 - **Pravidlo od uživatele: po každé změně aplikace nebo obsahu vydej update sám, bez ptaní.** Ověř (validate, build, smoke test), zvyš patch verzi v `package.json`
   (nový předmět = minor) a spusť `node scripts/release.mjs`. Nakonec zkontroluj živý `version.json`. Pokud ověření selže, nevydávej a řekni to.
-- `node scripts/release.mjs` (bez přepínačů) = sestaví PC+Android+iOS → nahraje instalátory na **GitHub Releases** (`scripts/publish-release.mjs`)
+- `node scripts/release.mjs` (bez přepínačů) = sestaví PC+Android+Linux+iOS → nahraje instalátory na **GitHub Releases** (`scripts/publish-release.mjs`)
   → nasadí web na **GitHub Pages** (`scripts/deploy-web.mjs`) včetně `version.json` a `subjects.json`.
 - **Co je nového:** před každým vydáním přidej nahoru do `CHANGELOG` v `src/app.js` krátký záznam (build bez něj spadne).
 - **Otázky/learning** se do nainstalovaných aplikací stáhnou samy při startu s internetem (`subjects.json`, uloží se do localStorage → offline).

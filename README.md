@@ -5,6 +5,7 @@ Offline aplikace na učení: ABCD testy po 20 náhodných otázkách, okamžitá
 ## Odkazy ke sdílení (vždy nejnovější verze)
 - Windows: https://github.com/pavka24/biflovna/releases/latest/download/Biflovna-Setup.exe
 - Android: https://github.com/pavka24/biflovna/releases/latest/download/Biflovna.apk
+- Linux (Mint, Ubuntu): https://github.com/pavka24/biflovna/releases/latest/download/Biflovna.deb
 - iPhone: https://pavka24.github.io/biflovna/ios/
 
 Aplikace se pak aktualizuje sama (otázky automaticky, nová verze aplikace přes lištu „Aktualizovat“).
@@ -13,6 +14,7 @@ Aplikace se pak aktualizuje sama (otázky automaticky, nová verze aplikace pře
 | Soubor | Pro koho | Instalace |
 |---|---|---|
 | `Instalace/PC/Biflovna-Setup.exe` | Windows | Spustit → Další → Dokončit. Vytvoří zástupce na ploše a v nabídce Start. Nepotřebuje admin práva. |
+| `Instalace/Linux/Biflovna.deb` | Linux Mint, Ubuntu, Debian | Dvojklik → Instalovat balíček (doinstaluje si WebKitGTK). Nebo `sudo apt install ./Biflovna.deb`. Najdeš ji pak v nabídce pod Vzdělávání. |
 | `Instalace/Android/Biflovna.apk` | Android | Otevřít v telefonu → povolit „Instalovat z neznámých zdrojů“ → Instalovat. |
 | **odkaz** `…github.io/biflovna/ios/` (nebo `Instalace/iOS/Biflovna.mobileconfig`) | iPhone / iPad | Otevřít v **Safari** → Nainstalovat Biflovnu → Povolit → Nastavení › Profil stažen › Instalovat. Poprvé spustit s internetem, pak jede offline. |
 
@@ -27,6 +29,7 @@ Pošli Claudovi prezentace (pptx/ppsx/pdf) a napiš „přidej předmět do Bifl
 node scripts/release.mjs          # obojí → Instalace/
 node scripts/release.mjs --pc     # jen Windows
 node scripts/release.mjs --android
+node scripts/release.mjs --linux   # jen balíček .deb
 node scripts/release.mjs --ios     # iOS profil + nahrání webu na GitHub Pages
 ```
 

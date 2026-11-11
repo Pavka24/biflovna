@@ -11,7 +11,7 @@ const pkg = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8"))
 const u = new URL(pkg.webUrl);
 const repo = `${u.hostname.split(".")[0]}/${u.pathname.split("/").filter(Boolean)[0]}`;
 const tag = "v" + pkg.version;
-const files = ["PC/Biflovna-Setup.exe", "Android/Biflovna.apk", "iOS/Biflovna.mobileconfig"]
+const files = ["PC/Biflovna-Setup.exe", "Android/Biflovna.apk", "Linux/Biflovna.deb", "iOS/Biflovna.mobileconfig"]
   .map(f => path.join(ROOT, "Instalace", f)).filter(f => fs.existsSync(f));
 const gh = (...a) => execFileSync(GH, a, { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] }).trim();
 
@@ -19,6 +19,7 @@ const notes = `Biflovna ${pkg.version}
 
 - **Windows:** Biflovna-Setup.exe
 - **Android:** Biflovna.apk
+- **Linux (Mint, Ubuntu):** Biflovna.deb
 - **iPhone:** ${pkg.webUrl}ios/`;
 let exists = true;
 try { gh("release", "view", tag, "--repo", repo); } catch { exists = false; }

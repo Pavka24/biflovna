@@ -1,8 +1,8 @@
-// Sestaví VŠE k rozeslání:  Instalace/PC/Biflovna-Setup.exe  +  Instalace/Android/Biflovna.apk  +  Instalace/iOS/Biflovna.mobileconfig
+// Sestaví VŠE k rozeslání:  Instalace/PC/Biflovna-Setup.exe  +  Instalace/Android/Biflovna.apk  +  Instalace/Linux/Biflovna.deb  +  Instalace/iOS/Biflovna.mobileconfig
 // a nahraje webovou verzi pro iPhone na GitHub Pages.
 // Oba soubory jsou samostatné a instalují se bez internetu.
 // Spuštění:  node scripts/release.mjs        (verze se bere z package.json)
-// Volby:     --pc  jen PC  |  --android  jen Android  |  --ios  jen iOS + nasazení webu
+// Volby:     --pc  jen PC  |  --android  jen Android  |  --linux  jen Linux  |  --ios  jen iOS + nasazení webu
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
@@ -50,6 +50,11 @@ if (want("pc")) {
   run(`"${path.join(TOOLS, "inno", "ISCC.exe")}" /Q /DAppVersion=${pkg.version} Biflovna.iss`, path.join(ROOT, "installer"));
 }
 
+if (want("linux")) {
+  step("Linux balíček (.deb)");
+  run("node scripts/build-linux.mjs");
+}
+
 if (want("android")) {
   step("Android APK (Capacitor)");
   fs.writeFileSync(path.join(ROOT, "android/local.properties"), `sdk.dir=${path.join(TOOLS, "android-sdk").replace(/\\/g, "/")}\n`);
@@ -79,5 +84,5 @@ if (!only.length || only.includes("--publish")) {          // plné vydání: in
 if (want("ios")) { step("Nasazení webu (GitHub Pages)"); run("node scripts/deploy-web.mjs"); }
 
 step("Hotovo");
-for (const d of [OUT_PC, OUT_AND, path.join(ROOT, "Instalace", "iOS")]) if (fs.existsSync(d)) for (const f of fs.readdirSync(d))
+for (const d of [OUT_PC, OUT_AND, path.join(ROOT, "Instalace", "Linux"), path.join(ROOT, "Instalace", "iOS")]) if (fs.existsSync(d)) for (const f of fs.readdirSync(d))
   console.log(`  ${path.relative(ROOT, path.join(d, f))}  (${(fs.statSync(path.join(d, f)).size / 1048576).toFixed(1)} MB)`);

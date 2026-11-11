@@ -103,6 +103,7 @@ function route() {
 // ===================== CO JE NOVÉHO =====================
 // Při každém vydání přidej nahoru záznam: krátce, lidsky, jen to, co pozná uživatel. Bez záznamu build spadne.
 const CHANGELOG = [
+  { v: "1.3.2", added: ["Verze pro Linux (Mint, Ubuntu): instalační balíček .deb"], fixed: [] },
   { v: "1.3.1", added: ["Vlastní počet otázek v testu (nebo rovnou všechny)", "Tlačítko Vybrat vše / Zrušit výběr u témat testu"], fixed: ["iPhone: pruh s hodinami nahoře už ladí s tmavým režimem", "Hezčí výběr počtu otázek místo rozbalovacího seznamu", "Potvrzovací okna (ukončení testu, smazání statistik) ladí se vzhledem aplikace"] },
   { v: "1.3.0", added: ["Nový skleněný vzhled s plynulými animacemi a čitelnějším písmem", "Tlačítko Zpět v testu: můžeš se vracet k předchozím otázkám", "Témata jsou v každém testu zastoupená rovnoměrně", "Víc otázek na kategorie kabelů (Cat.5 až Cat.8)", "Rozdělaný test jde znovu otevřít tlačítkem Pokračovat v testu"], fixed: ["Pryč jsou výpočty podsítí a otázky na konkrétní IP adresy", "PC: nabídka nové verze se už neztratí při pomalejším startu", "Výběr témat pro PDF už nemění témata testu"] },
   { v: "1.2.10", added: ["Nové otázky na látku, která chyběla (firewally, NAT, kabely, optika, WiFi)"], fixed: ["Chybné a duplicitní otázky"] },
@@ -338,6 +339,7 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => th
 // Obsah (otázky, výpisky) se stáhne sám a uloží pro offline. Nová verze aplikace → lišta s tlačítkem.
 const IS_PC = () => !!(window.pywebview && window.pywebview.api);
 const IS_ANDROID = () => !!(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+const IS_LINUX = () => !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.biflovna);   // okno z balíčku .deb (linux/biflovna.py)
 const IS_HOSTED = () => /github\.io$/.test(location.hostname);     // webová verze se aktualizuje přes service worker
 const newer = (a, b) => { const x = a.split(".").map(Number), y = b.split(".").map(Number); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); return false; };
 
@@ -385,6 +387,8 @@ async function offerUpdate(v) {
       catch (e) { b.disabled = false; b.textContent = "Zkusit znovu"; toast("Stažení se nepovedlo – zkontroluj internet."); }
       finally { h && h.remove && h.remove(); }
     });
+  } else if (IS_LINUX() && v.linux) {
+    updateBar(`Nová verze Biflovny ${v.version}`, "Stáhne se balíček .deb. Otevři ho a potvrď instalaci.", "Stáhnout", () => { location.href = v.linux; $("#upd")?.remove(); });
   } else if (IS_HOSTED()) {
     updateBar(`Nová verze Biflovny ${v.version}`, "Stačí klepnout, nic se neinstaluje.", "Aktualizovat", async () => {
       try { const r = await navigator.serviceWorker.getRegistration(); if (r) await r.update(); } catch (e) { /* načte se i bez toho */ }
